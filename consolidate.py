@@ -1,14 +1,10 @@
+#!/usr/bin/python
 files = [
         "notes.md",
         "getting_started/notes.md",
         "getting_started/initialization/notes.md",
-        "getting_started/initialization/init.sh",
         "getting_started/cluster/notes.md",
-        "getting_started/cluster/watch_cluster.sh",
-        "getting_started/cluster/watch_compute.sh",
-        "getting_started/cluster/watch_disks.sh",
-        "getting_started/cluster/create_cluster.sh",
-        "getting_started/cluster/delete_cluster.sh"
+        "getting_started/launching_pods/notes.md",
         ]
 
 with open("README.md",'w') as consolidated:

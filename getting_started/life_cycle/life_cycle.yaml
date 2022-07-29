@@ -1,0 +1,36 @@
+# life_cycle.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  volumes:
+    - name: data
+      gcePersistentDisk:
+        pdName: my-disk
+        fsType: ext4  
+  containers:
+  - image: alpine
+    name: alpine
+    volumeMounts:            
+      - mountPath: "/data" 
+        name: "data"
+    command:
+      - /bin/sh
+    args:
+      - -c
+      - echo `date` started >> /data/log.txt ; sleep infinity
+    lifecycle:
+      postStart:
+        exec:
+          command: 
+          - /bin/sh
+          - -c
+          - echo `date` postStart >> /data/log.txt
+      preStop:
+        exec:
+          command: 
+          - /bin/sh
+          - -c
+          - echo `date` preStop >> /data/log.txt 
+  restartPolicy: Never

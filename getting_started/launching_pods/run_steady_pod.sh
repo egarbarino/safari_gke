@@ -15,4 +15,14 @@ kubectl exec my-pod -- ls -l
 # Pipe data
 cat /etc/resolv.conf | kubectl exec -i my-pod -- wc 
 
+# Open shell
+kubectl exec my-pod -ti -- sh
+
+# Experiments
+#
+# - Exit and enter shell again 
+# - Delete Pod
+
+
+
 

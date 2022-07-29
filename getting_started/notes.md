@@ -22,8 +22,9 @@ set -g status on
 
 Project (Optional)
 
-Add the below line to `.profile` in your home directory
-to avoid setting the project for every session:
+Add the below line to the end of `.bashrc` 
+in your home directory to avoid setting the 
+project for every session:
 
 ```
 gcloud config set project safari-gke
