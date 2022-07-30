@@ -1,0 +1,14 @@
+# nginx-liveness.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    livenessProbe:
+      httpGet:
+        path: /index.html
+        port: 80
+  restartPolicy: Always

@@ -1,4 +1,4 @@
-### Managing Pods' Life Cycle
+## Managing Pods' Life Cycle
 
 Learning objectives:
 
@@ -6,7 +6,7 @@ Learning objectives:
 - Limit container's RAM and CPU usage
 
 
-#### Override (or Specify) Container Startup
+### Override (or Specify) Container Startup
 
 * We may want to override the container startup settings
 * We may want to specify the container startup settings
@@ -35,7 +35,7 @@ spec:
 * Run `kubectl create -f alpine-script.yaml`
 * Follow logs with `kubectl logs -f alpine`
 
-#### Specify CPU and RAM Limits
+### Specify CPU and RAM Limits
 
 * We don't want containers to take as much RAM as they want
 * We don't want containers to take as much CPU as they want
@@ -73,7 +73,7 @@ Experiments
 
 * Try excessive values to see what happpens
 
-#### Pod Volumes and Volume Mounts
+### Pod Volumes and Volume Mounts
 
 * `emptyDir` - A temporary file system so that containers within a single Pod can exchange data.
 • `hostPath` - A directory within the Node's file system 
@@ -198,7 +198,7 @@ Experiments
 * Watch the creation of Google disks on a different screen
 
 
-#### PostStart and PreStop Hooks
+### PostStart and PreStop Hooks
 
 1. View contents of `life_cycle.yaml`
 2. Notice `lifecycle.postStart` and `lifecycle.preStop`

@@ -1,4 +1,4 @@
-### Launching Docker Containers Using Pods
+## Launching Docker Containers Using Pods
 
 Learning objectives:
 
@@ -22,11 +22,11 @@ Learning objectives:
 
 
 
-#### Watch Pod Activity
+### Watch Pod Activity
 
 Set up a new pane and run `watch -n 1 kubectl get pod`
 
-#### Decide on a Docker Image Registry
+### Decide on a Docker Image Registry
 
 * Docker Hub is assumed by default
 * Otherwise, Google Container Registry's public images may be used:
@@ -35,7 +35,7 @@ Set up a new pane and run `watch -n 1 kubectl get pod`
 gcloud container images list --project google-containers
 ```
 
-#### Run a Single Command
+### Run a Single Command
 
 
 Obtain date using Google Registry's Busybox image
@@ -56,7 +56,7 @@ Passing arguments using -i flag
 echo /etc/resolv.conf | kubectl run my-pod --restart=Never --image=alpine -i --rm wc
 ```
 
-#### Run a One-Off Shell
+### Run a One-Off Shell
 
 ```
 kubectl run my-pod --image=alpine --restart=Never -it --rm sh
@@ -122,7 +122,7 @@ Experiments
 - Exit and enter shell again 
 - Delete Pod
 
-#### Running a Web Server
+### Running a Web Server
 
 Launch web server
 
@@ -150,7 +150,7 @@ Experiments
 - Dettach by pressing CTRL+C
 - Destroy Pod
 
-#### Pod Manifest
+### Pod Manifest
 
 Kubectl run can be seen as creating a Pod manifst on the fly
 
@@ -192,7 +192,7 @@ spec:
 * Delete runnin nginx using `kubectl delete pod/nginx` or `kubectl delete -f nginx.yaml` before applying
 * Run `kubectl apply -f nginx-clean.yaml`
 
-### Network Ports
+#### Network Ports
 
 * Not mandatory but good hygene
 * Naming ports is a necessity when multiple ones are in use

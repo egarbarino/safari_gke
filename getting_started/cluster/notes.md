@@ -1,4 +1,4 @@
-### Creating and Destroying Kubernetes Clusters
+## Creating and Destroying Kubernetes Clusters
 
 Learning objectives:
 
@@ -9,7 +9,7 @@ Learning objectives:
 - Learn how to launch a Kubernetes cluster
 - Learn how to destroy a Kubernetes cluster
 
-#### Create Cluster
+### Create Cluster
 
 Set up four panes in TMUX 
 
@@ -26,7 +26,7 @@ gcloud container clusters create my-cluster \
    --project safari-gke
 ```
 
-#### Introduce Nodes and Objects
+### Introduce Nodes and Objects
 
 ```
 ls -la ~/.kube
@@ -37,7 +37,7 @@ kubectl explain node
 kubectl get node/XXX -o yaml
 ```
 
-#### Destroy Cluster
+### Destroy Cluster
 
 Destroy Kubernetes cluster (optional)
 
