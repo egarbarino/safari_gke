@@ -136,8 +136,6 @@ Learning objectives:
     - Learn how to access the web server's port locally
 - Learn how to define Pods using manifests
 
-
-
 ### Watch Pod Activity
 
 Set up a new pane and run `watch -n 1 kubectl get pod`
@@ -363,6 +361,166 @@ echo "show databases" | kubectl exec -i mysql \
     -- mysql --password=mypassword
 ```
 
+### Namespaces
+
+* Help group and secure resources
+* Help segregate Kubernetes resources from user-defined resources
+
+#### Default vs Kubernetes Namespaces
+
+Unless otherwise specified, the _default_ namespace is assumed.
+
+Launch some workload
+
+```
+kubectl run nginx --image=nginx 
+```
+
+Check that getting pods means an implicit `-n default`
+
+```
+kubectl get pod
+kubectl get pod -n default
+```
+
+Checkout what namespaces are defined (`ns` also works)
+
+```
+kubectl get namespace
+```
+
+List Kube-System's Pods
+
+```
+kubectl get pod -n kube-system
+```
+
+These are regular containers, for example, open a shell on `kube-dns-*`:
+
+```
+kubectl exec -ti kube-dns-56494768b7-4v8rm -n kube-system -- sh
+```
+
+Note: You can use `-c` to select the Pod's container
+
+#### All Namespaces
+
+You can get resources in all namespaces using the `--all-namespaces` or `-A`
+
+```
+kubectl get pod --all-namespaces
+kubectl get pod -A
+```
+
+#### Custom Namespaces
+
+For example, for different environments
+
+```
+kubectl namespace create dev
+kubectl namespace create qa
+kubectl namespace create prod
+```
+
+```
+kubectl run nginx --image=nginx -n dev
+kubectl run nginx --image=nginx -n qa
+kubectl run nginx --image=nginx -n prod
+```
+
+```
+kubectl get pod -n dev
+kubectl get pod -n qa
+kubectl get pod -n prod
+kubectl get pod -A | grep nginx
+```
+
+
+### Labels
+
+Key/value pairs to reference a family of related objects (e.g., replicas of the same Pod)
+
+* Version numbers
+* Environments (e.g., dev, staging, production)
+* Deployment type (e.g., canary release or A/B testing
+
+```
+kubectl run nginx --image=nginx
+kubectl get pods --show-labels
+```
+
+#### Defining Labels in Pod Manifest
+
+1. Show lanels on your pod monitoring tab: `kubectl get pod --show-labels`
+
+Explore `nginx-labels.yaml`
+
+Apply manifest:
+
+```
+kubectl create -f nginx-labels.yaml
+```
+
+Define labels imperatively
+
+```
+kubectl run nginx1 --image=nginx -l "env=dev,author=Ernie"
+kubectl run nginx2 --image=nginx -l "env=dev,author=Mohit"
+```
+
+Change monitoring window to show labels as columns:
+
+```
+kubectl get pods -L env,author
+```
+
+#### Selector Expressions
+
+Equality-based expressions (equality)
+
+```
+kubectl get pods -l author=Ernie 
+kubectl get pods -l author!=Ernie
+kubectl get pods -l 
+```
+
+Set-based expressions (membership)
+
+Show pods that contain the label _caution_:
+
+```
+kubectl get pods -l caution 
+```
+
+Show pods that DO NOT contain the label _caution_:
+
+```
+kubectl get pods -l \!caution 
+```
+
+More complex expressions
+
+```
+kubectl get pods -l "author in (Ernie,Mohit)"
+```
+
+Not in set
+
+```
+kubectl get pods -l "author notin (Ernie,Mohit)"
+```
+
+
+#### Updating Labels at Runtime
+
+Use --overwrite flag:
+
+```
+kubectl label pod/nginx author=Bert --overwrite
+kubectl get pods -l "author notin (Ernie,Mohit)"
+```
+
+
 
 
 
@@ -575,6 +733,479 @@ Experiments
 4. Run `kubectl create -f life_cycle.yaml`
 5. Check logs via `kubectl exec -ti my-pod -- cat /data/log.txt`
 6. Kill my-pod via `kubectl delete pod/my-pod` and go to step 4
+
+
+
+# High Availability and High Scalability
+Source: [ha_and_hs](ha_and_hs)
+
+## Launching Deployments
+Source: [ha_and_hs/launching_deployments](ha_and_hs/launching_deployments)
+
+Set up monitoring in different panes
+
+```
+watch kubectl get deployment
+watch kubectl get replicaset
+watch kubectl get pod
+```
+
+Create deployment
+
+```
+kubectl create deployment nginx --image-nginx
+```
+
+Delete deployment
+
+```
+kubectl delete deployment/nginx
+```
+
+Specify number of replicas 
+
+```
+kubectl create  deployment --image=nginx --replicas=3
+```
+
+### Scaling
+
+Scale number of replicas
+
+```
+kubectl scale deploy/nginx --replicas=5
+```
+
+### Updating Docker Image
+
+Update the pod's image
+
+```
+kubectl set image deploy/nginx nginx=nginx:1.9.1
+```
+
+Understand shown in `kubectl get deployments`
+
+* DESIRED: The target state: specified in deployment. spec.replicas
+* CURRENT: The number of replicas running but not necessarily available: specified in deployment.status. replicas
+* UP-TO-DATE: The number of Pod replicas that have been updated to achieve the current state: specified in deployment.status.updatedReplicas
+* AVAILABLE: The number of replicas actually available to users: specified in deployment.status. availableReplicas
+* AGE: The amount of time that the deployment controller has been running since first created
+
+### Deployment Manifest
+
+Open `simpleDeployment.yaml`
+
+Note the following:
+
+* Pod description is embeded under `template`
+* Note replicas
+* Note `selector.matchLabels` and relationship with Pod
+
+Create deployment and note simlar result as `kubectl create deployment create ...`
+
+```
+kubectl apply -f simpleDeployment.yaml
+```
+
+### Monitoring and Controlling a Deployment
+
+Run on a different pane:
+
+```
+kubectl rollout status deployment/nginx
+```
+
+Now create a deployment
+
+```
+kubectl create deployment nginx --image=nginx --replicas=12
+```
+
+Puase the deployment
+
+```
+kubectl rollout pause deploy/nginx
+```
+
+Resume the deplyment
+
+```
+kubectl rollout resume deploy/nginx
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Rolling and Blue/Green Deployments
+Source: [ha_and_hs/strategies](ha_and_hs/strategies)
+
+### Revision Tracking vs Scaling Only Deployments
+
+Changes in the number of replicas do not result in a deployment revision
+
+Open in a new pane
+
+```
+watch kubectl rollout history 
+```
+
+Create a deployment and perform 3 scaling updates, 1 image update, and 1 scaling update again
+
+```
+kubectl create deployment nginx --image=nginx 
+```
+
+```
+kubectl scale deploy/nginx --replicas=1
+kubectl scale deploy/nginx --replicas=5
+kubectl scale deploy/nginx --replicas=3
+kubectl set image deploy/nginx nginx=nginx:1.9.1
+kubectl scale deploy/nginx --replicas=1
+```
+
+### Broad Deployemnt Types
+
+* Recrate: Destroy everything first and only then create the replicas declared by the new Deployment’s manifest
+* RollingUpdate: Fine-tune the upgrade process to achieve from something as “careful” as updating one Pod at a time, all the way up to a fully-fledged blue green deployment in which the entire new set of Pod replicas are stood up before disposing of the old ones.
+
+### Recreate
+
+Be sure you have montioring panes for deployments, pods, and replicas.
+
+Note the difference in terms of Nginx versions in `nginx-v1-initial-v1.yaml` and `nginx-v2-recreate.yaml`.
+
+Launch first version:
+
+```
+kubectl create -f nginx-v1-initial.yaml
+```
+
+Apply `v2`, which produces an upgrade to nginx 1.9.1:
+
+```
+kubectl apply -f nginx-recreate-v2.yaml
+```
+
+Observe all Pods being killed before producing the update
+
+### Rolling Updates
+
+* Both progressive and blue/green deployments are implemented using the same approach
+* Understand `maxSurge` vs `maxUnavailable` (book, slides)
+
+
+## Rolling Back Deployments
+Source: [ha_and_hs/roll_back](ha_and_hs/roll_back)
+
+Note: This section assumes that the nginx deployment updates launched in the previous sections are still active:
+
+List rollout history on a different panel
+
+``` 
+watch kubectl rollout history deploy/nginx
+```
+
+Undo the last deployment
+
+```
+kubectl rollout undo deploy/nginx
+```
+
+Undo to a specific revision:
+
+```
+kubectl rollout undo deploy/nginx --to-revision=2
+```
+
+
+
+
+
+## Instrumenting Static Scaling and Autoscaling
+Source: [ha_and_hs/scaling](ha_and_hs/scaling)
+
+* We've covered static scaling already using the 'replicas' attribute, both imperatively or declaratively
+* Understand the Horizontal Pod Autoscaler (HPA) vs Cluster-wise Scaling
+
+### Setting Up Autoscaling
+
+Note: We assume that the previous nginx deployment is still running
+
+Open a pane to watch the autoscaler first:
+
+```
+watch kubectl get hpa
+```
+
+Now launch an autoscaler against the nginx deployment
+
+```
+kubectl autoscale deployment/nginx --min=1 --max=3 --cpu-percent=5
+```
+
+Explore declarative version too (note that this version defines 2 replicas!)
+
+```
+vi hpa.yaml
+kubectl apply -f hpa.yaml
+```
+
+#### Spiking CPU Internally
+
+Generate infinite loop to spike the CPU and see auto-scaling in action. Ensure you pick the name of an actual Pod, rather than the one used below.
+
+```
+kubectl exec -it nginx-XXXXX-XXXX -- sh -c 'while true; do true; done'
+```
+
+#### Spiking CPU Externally
+
+Install Apache Bench
+
+```
+sudo apt-get update
+sudo apt-get install apache2-utils
+```
+
+Expose the other Pod's TCP port
+
+```
+kubectl port-forward nginx-XXXXX-XX 1080:80
+```
+
+Generate one million requests against it:
+
+```
+ab -n 1000000 -c 100 http://localhost:1080
+```
+
+### Cluster-wise Scaling
+
+* Understand that the trigger is insufficient Pod resources rather than CPU (book)
+
+Create a new cluster with auto-scaling enabled
+
+```
+gcloud container clusters create scalable-cluster \
+    --num-nodes=3 \ 
+    --enable-autoscaling \
+    --min-nodes 3 \ 
+    --max-nodes 6
+```
+
+Create a significant number of nodes:
+
+```
+kubectl run nginx --image=nginx --replicas=30
+```
+
+See the cluster auto-scale:
+
+```
+watch kubectl get nodes
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Understanding Service Discovery Use Cases
+Source: [ha_and_hs/service_discovery_use_cases](ha_and_hs/service_discovery_use_cases)
+
+### Pod-to-Pod Use Case
+
+Delete all previous deployments and Pods
+
+Open an additional pane to watch services:
+
+```
+watch -n1 kubectl get service
+```
+
+Create an Nginx deployment
+
+```
+kubectl create deployment nginx --image=nginx --replicas=3
+```
+
+Explore `update_hostname.sh` and run it:
+
+```
+./update_hostname.sh
+```
+
+
+Create a service for the deployment
+
+```
+kubectl expose deploy/nginx --port=80
+```
+
+Explore `service.yaml` which is the declarative version and apply it:
+
+```
+kubectl create -f service.yaml
+```
+
+Access nginx from a new Pod
+
+```
+kubectl run test --rm -i --image=alpine -- sh
+
+wget -O - http://nginx | grep title
+wget -O - http://nginx2 | grep title
+```
+
+Try wget multiple times to see different hostnames
+
+#### Internet-to-Pod Connectivity Use Case
+
+## Publishing Services on the Public Internet
+Source: [ha_and_hs/service_public_internet](ha_and_hs/service_public_internet)
+
+Create a service of type LoadBalancer
+
+```
+kubectl expose deploy/nginx --name nginx3 --type=LoadBalancer --port=80
+```
+
+Explore `serviceLoadBalancer.yaml` and apply it
+
+
+```
+kubectl create -f serviceLoadBalancer.yaml
+```
+
+Wait for the external IP to be seen on the pane in which `kubectl get service` is being refreshed
+
+## Canary and Zero Downtime Releases
+Source: [ha_and_hs/canary](ha_and_hs/canary)
+
+### Canary
+
+Watch myservice's endpoints in a different pane
+
+```
+watch -n1 kubectl get service/myservice
+```
+
+Watch Pods so that they show their `prod` label
+
+```
+watch -n1 kubectl get pods -L prod
+```
+
+Explore and apply manifest (note label selector)
+
+```
+kubect create -f myservice.yaml
+```
+
+Create a service targeting Pods whose label `prod` is set to `true`
+
+```
+kubectl run v1 --image=nginx --port=80 --replicas=3 --labels="prod=true"
+```    
+
+Wait until External IP is assigned to service and fetch version using
+
+```
+curl -I -s http://IP_ADDRESS | grep Server
+```
+
+Keep polling the web server on a different pane:
+
+```
+while true ; do curl -I -s http://IP_ADDRESS | grep Server ; done
+```
+
+Create new deployment in which we use Apache rather than Nginx
+
+```
+kubectl create deployment v2 --image=httpd --port=80 --replicas=3 --labels="prod=false"
+```
+
+Note that `prod=false`
+
+Pick a random Pod and change its label to `prod=true`:
+
+```
+kubectl label pod/NAME prod=true --overwrite
+```
+
+Notice that one IP address will have joined `myservice`
+
+Keep changing the label of Pods until all of them have `prod=true`
+
+Delete the old nginx deployment so that requests are only served by Apache
+
+```
+kubectl delete deployment/v1
+```
+
+### Zero-downtime Deployments
+
+Delete all previous deployments and services
+
+Create a new Deployment called `site`
+
+```
+kubectl create deployment site --image=nginx --replicas=3
+```
+
+Expose deployment and note `--session-affinity`
+
+```
+kubectl expose deploy/site --port=80 --type=LoadBalancer --session-affinity=ClientIP
+```
+
+Wait for public IP address
+
+Watch server with IP on a different pane
+
+```
+while true ; do curl -s -I http://IP_ADDRESS | grep Server; sleep 1 ; done
+```
+
+Change base image to Apache's
+
+```
+kubectl set image deploy/site site=httpd
+```
+
+Understand that applying a new manifest would cause the same effect
+
+
+
+
 
 
 

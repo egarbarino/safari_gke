@@ -1,0 +1,22 @@
+# simpleDeployment.yaml
+apiVersion: apps/v1   
+kind: Deployment
+metadata:
+  name: nginx-declarative
+spec:
+  strategy: 
+    type: RollingUpdate
+    maxSurge: 100%           # Allocate no more that one extra Pod
+    maxUnavailability: 0     # Never have any Pod down
+  replicas: 6          # Specify number of replicas
+  selector:
+    matchLabels:       # Select Embedded Pod 
+      app: nginx-app 
+  template:            # Embedded Pod Template
+    metadata:
+      labels:
+        app: nginx-app 
+    spec:
+      containers:      
+      - name: nginx-container
+        image: nginx:1.22-alpine-perl

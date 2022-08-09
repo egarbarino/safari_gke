@@ -1,0 +1,12 @@
+# service.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx2    # To avoid collision with imperative version
+spec:
+  selector:
+    run: nginx    # Must match Pod label!
+  ports:
+  - protocol: TCP
+    port: 80
+ 

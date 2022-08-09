@@ -6,6 +6,14 @@ files = [
         "getting_started/cluster/notes.md",
         "getting_started/launching_pods/notes.md",
         "getting_started/life_cycle/notes.md",
+        "ha_and_hs/notes.md",
+        "ha_and_hs/launching_deployments/notes.md",
+        "ha_and_hs/strategies/notes.md",
+        "ha_and_hs/roll_back/notes.md",
+        "ha_and_hs/scaling/notes.md",
+        "ha_and_hs/service_discovery_use_cases/notes.md",
+        "ha_and_hs/service_public_internet/notes.md",       
+        "ha_and_hs/canary/notes.md",               
         ]
 
 with open("README.md",'w') as consolidated:

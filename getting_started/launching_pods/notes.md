@@ -20,8 +20,6 @@ Learning objectives:
     - Learn how to access the web server's port locally
 - Learn how to define Pods using manifests
 
-
-
 ### Watch Pod Activity
 
 Set up a new pane and run `watch -n 1 kubectl get pod`
@@ -246,6 +244,166 @@ spec:
 echo "show databases" | kubectl exec -i mysql \
     -- mysql --password=mypassword
 ```
+
+### Namespaces
+
+* Help group and secure resources
+* Help segregate Kubernetes resources from user-defined resources
+
+#### Default vs Kubernetes Namespaces
+
+Unless otherwise specified, the _default_ namespace is assumed.
+
+Launch some workload
+
+```
+kubectl run nginx --image=nginx 
+```
+
+Check that getting pods means an implicit `-n default`
+
+```
+kubectl get pod
+kubectl get pod -n default
+```
+
+Checkout what namespaces are defined (`ns` also works)
+
+```
+kubectl get namespace
+```
+
+List Kube-System's Pods
+
+```
+kubectl get pod -n kube-system
+```
+
+These are regular containers, for example, open a shell on `kube-dns-*`:
+
+```
+kubectl exec -ti kube-dns-56494768b7-4v8rm -n kube-system -- sh
+```
+
+Note: You can use `-c` to select the Pod's container
+
+#### All Namespaces
+
+You can get resources in all namespaces using the `--all-namespaces` or `-A`
+
+```
+kubectl get pod --all-namespaces
+kubectl get pod -A
+```
+
+#### Custom Namespaces
+
+For example, for different environments
+
+```
+kubectl namespace create dev
+kubectl namespace create qa
+kubectl namespace create prod
+```
+
+```
+kubectl run nginx --image=nginx -n dev
+kubectl run nginx --image=nginx -n qa
+kubectl run nginx --image=nginx -n prod
+```
+
+```
+kubectl get pod -n dev
+kubectl get pod -n qa
+kubectl get pod -n prod
+kubectl get pod -A | grep nginx
+```
+
+
+### Labels
+
+Key/value pairs to reference a family of related objects (e.g., replicas of the same Pod)
+
+* Version numbers
+* Environments (e.g., dev, staging, production)
+* Deployment type (e.g., canary release or A/B testing
+
+```
+kubectl run nginx --image=nginx
+kubectl get pods --show-labels
+```
+
+#### Defining Labels in Pod Manifest
+
+1. Show lanels on your pod monitoring tab: `kubectl get pod --show-labels`
+
+Explore `nginx-labels.yaml`
+
+Apply manifest:
+
+```
+kubectl create -f nginx-labels.yaml
+```
+
+Define labels imperatively
+
+```
+kubectl run nginx1 --image=nginx -l "env=dev,author=Ernie"
+kubectl run nginx2 --image=nginx -l "env=dev,author=Mohit"
+```
+
+Change monitoring window to show labels as columns:
+
+```
+kubectl get pods -L env,author
+```
+
+#### Selector Expressions
+
+Equality-based expressions (equality)
+
+```
+kubectl get pods -l author=Ernie 
+kubectl get pods -l author!=Ernie
+kubectl get pods -l 
+```
+
+Set-based expressions (membership)
+
+Show pods that contain the label _caution_:
+
+```
+kubectl get pods -l caution 
+```
+
+Show pods that DO NOT contain the label _caution_:
+
+```
+kubectl get pods -l \!caution 
+```
+
+More complex expressions
+
+```
+kubectl get pods -l "author in (Ernie,Mohit)"
+```
+
+Not in set
+
+```
+kubectl get pods -l "author notin (Ernie,Mohit)"
+```
+
+
+#### Updating Labels at Runtime
+
+Use --overwrite flag:
+
+```
+kubectl label pod/nginx author=Bert --overwrite
+kubectl get pods -l "author notin (Ernie,Mohit)"
+```
+
 
 
 
