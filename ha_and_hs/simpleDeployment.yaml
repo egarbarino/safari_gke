@@ -4,11 +4,7 @@ kind: Deployment
 metadata:
   name: nginx-declarative
 spec:
-  strategy: 
-    type: RollingUpdate
-    maxSurge: 1              # Allocate no more that one extra Pod
-    maxUnavailability: 0     # Never have any Pod down
-  replicas: 6          # Specify number of replicas
+  replicas: 3          # Specify number of replicas
   selector:
     matchLabels:       # Select Embedded Pod 
       app: nginx-app 
@@ -19,4 +15,4 @@ spec:
     spec:
       containers:      
       - name: nginx-container
-        image: nginx:1.22-alpine
+        image: nginx:1.7.1

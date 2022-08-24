@@ -5,7 +5,7 @@ metadata:
   name: nginx4
 spec:
   selector:
-    run: nginx
+    app: nginx
   ports:
   - protocol: TCP
     port: 80

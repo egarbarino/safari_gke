@@ -1,4 +1,4 @@
-# simpleDeployment.yaml
+# nginx-v3-rolling-one-at-a-time.yaml
 apiVersion: apps/v1   
 kind: Deployment
 metadata:
@@ -6,8 +6,9 @@ metadata:
 spec:
   strategy: 
     type: RollingUpdate
-    maxSurge: 100%           # Allocate no more that one extra Pod
-    maxUnavailability: 0     # Never have any Pod down
+    rollingUpdate:
+      maxSurge: 1              # Allocate no more that one extra Pod
+      maxUnavailable: 0     # Never have any Pod down
   replicas: 6          # Specify number of replicas
   selector:
     matchLabels:       # Select Embedded Pod 
@@ -19,4 +20,4 @@ spec:
     spec:
       containers:      
       - name: nginx-container
-        image: nginx:1.22-alpine-perl
+        image: nginx:1.22-alpine

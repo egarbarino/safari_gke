@@ -1,10 +1,15 @@
-# simpleDeployment.yaml
+# nginx-v4-blue-green.yaml
 apiVersion: apps/v1   
 kind: Deployment
 metadata:
   name: nginx-declarative
 spec:
-  replicas: 3          # Specify number of replicas
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%           # Allocate no more that one extra Pod
+      maxUnavailable: 0     # Never have any Pod down
+  replicas: 6          # Specify number of replicas
   selector:
     matchLabels:       # Select Embedded Pod 
       app: nginx-app 
@@ -15,4 +20,4 @@ spec:
     spec:
       containers:      
       - name: nginx-container
-        image: nginx:1.22.0
+        image: nginx:1.22-alpine-perl

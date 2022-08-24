@@ -1,10 +1,12 @@
-# simpleDeployment.yaml
+# nginx-v2-recreate.yaml
 apiVersion: apps/v1   
 kind: Deployment
 metadata:
   name: nginx-declarative
 spec:
-  replicas: 3          # Specify number of replicas
+  strategy: 
+    type: Recreate
+  replicas: 6          # Specify number of replicas
   selector:
     matchLabels:       # Select Embedded Pod 
       app: nginx-app 
@@ -15,4 +17,4 @@ spec:
     spec:
       containers:      
       - name: nginx-container
-        image: nginx:1.7.1
+        image: nginx:1.22-perl
