@@ -1,6 +1,110 @@
 # S1 Getting Started With GKE
 
-## GCP Beginners Only Section
+## Pre-Course Set Up
+
+### Instructor Only
+
+Main Browser
+
+* Tab 1: https://cloud.google.com
+* Tab 2: https://shell.cloud.com/?show=terminal
+* Tab 3: https://garba.org/posts/2018/k8s_pod_lc/
+* Tab 4: https://garba.org/posts/2020/k8s-life-cycle/
+* Tab 5: https://crontab.guru/
+
+Secondary Browser
+
+https://shell.cloud.com/?show=ide
+
+On Tab 2 (Google Cloud Shell)
+
+Create three TMUX Windows (CTRL+B C) and name them (CTRL+B ,) as follows:
+
+0 - BEFORE
+1 - AFTER
+3 - Main
+4 - Debugging
+
+### Windows 0 and 1
+
+On both Window 0 (BEFORE) and Window 1 (AFTER), set up panes as follows:
+
+```
+|------------------|
+|        1         |
+|------------------|
+|        2         |
+|------------------|
+|        3         | 
+|------------------|
+|        4         |
+--------------------
+```
+
+1. Pane 1 - Monitor clusters: `watch gcloud container clusters list`
+2. Pane 2 - Monitor compute: `watch gcloud compute instances list`
+3. Pane 3 - Monitor disks: `watch gcloud compute disks list`
+4. Pane 4 - Run ad-hoc commands here
+
+### Window 0 (BEFORE)
+
+Clear all panes and DO NOT PRESS Enter for commands
+
+Pane 4
+
+```
+cd safari_gke/getting_started
+cat create_cluster.sh
+# Copy 
+clear
+# Paste without pressing ENTER
+```
+
+### Window 1 (AFTER)
+
+Pane 4
+
+```
+cd safari_gke/getting_started
+cat create_cluster.sh
+# Copy 
+clear
+# Paste
+```
+
+Press ENTER on panes 1-3 commands after the cluster is created
+
+### Window 3 (Main)
+
+
+```
+|------------------|
+|        1         |
+|------------------|
+|        2         |
+|------------------|
+| 3.left | 3.right | 
+|------------------|
+|        4         |
+--------------------
+```
+
+Clear all panes
+
+### Window 4 (Debugging)
+
+```
+|------------------|
+|        1         |
+|------------------|
+|        2         |
+|------------------|
+```
+
+Pane 1: `kubectl get -w events`
+Pane 2: `watch -n kubectl top node`
+
+### Student Only
 
 Fundamentals
 
@@ -26,19 +130,16 @@ Set a shorter command prompt if useful:
 export PS1='$ '
 ```
 
+
 ## S1.1 Setting up The Google Cloud Shell and GKE
 
 ### Access Google Cloud Shell
 
 Browse [https://cloud.google.com/](https://cloud.google.com/) and click on the Google Cloud Shell Icon
 
-Why?
-
-- gcloud
-- kubectl
-- python
-
 ### Login If Not Running in Cloud Shell
+
+**Note:** Use Main TMUX Window, not the cluster creation one!
 
 ```
 gcloud components install kubectl
@@ -66,28 +167,12 @@ _end of section_
 
 ## S1.2 Creating and Destroying Kubernetes Clusters
 
-### Create Cluster (All)
-
-Scripts: `create_cluster.sh`
-
-Set up four panes in TMUX 
-
-1. Pane 1 - Monitor clusters: `watch gcloud container clusters list`
-2. Pane 2 - Monitor compute: `watch gcloud compute instances list`
-3. Pane 3 - Monitor disks: `watch gcloud compute disks list`
-4. Pane 4 - Run ad-hoc commands here
-
-Optionally, create a new TMUX window to get global telemetry:
-
-1. Pane 1 - `watch kubectl get events -w`
-2. Pane 2 - `watch kubectl top node`
-3. Pane 3 - `watch kubectl top pod`
-
+Cd to `safari_gke/getting_started`
 
 ### Create Cluster (Course)
 
 ```
-./create_cluster.sh
+vi create_cluster.sh
 ls -la ~/.kube
 ```
 
@@ -131,16 +216,12 @@ gcloud container clusters delete my-cluster --async --quiet --zone europe-west2-
 
 ### Watch Pod Activity
 
-Open a new TMUX window
+On Main TMUX Window
 
-Pane 1. Run `watch -n 1 kubectl get pod`
-Pane 2. Run `kubectl get -w events`
-Pane 3. Run commands here
-
-### Decide on a Docker Image Registry
-
-* Docker Hub is assumed by default
-* Otherwise, Google Container Registry's public images may be used:
+Pane 1: Run `watch -n 1 kubectl get pod`
+Pane 2: Run `kubectl get -w events`
+Pane 3: Leave empty
+Pane 4: Run commands here
 
 ### Using GCR.IO (Student Only)
 
