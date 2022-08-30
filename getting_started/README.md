@@ -20,10 +20,10 @@ On Tab 2 (Google Cloud Shell)
 
 Create three TMUX Windows (CTRL+B C) and name them (CTRL+B ,) as follows:
 
-0 - BEFORE
-1 - AFTER
-3 - Main
-4 - Debugging
+0. BEFORE
+1. AFTER
+3. Main
+4. Debugging
 
 ### Windows 0 and 1
 
