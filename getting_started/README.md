@@ -6,8 +6,8 @@
 
 Main Browser
 
-* Tab 1: https://cloud.google.com
-* Tab 2: https://shell.cloud.com/?show=terminal
+* Tab 1: https://console.cloud.google.com
+* Tab 2: https://shell.cloud.google.com/?show=terminal
 * Tab 3: https://garba.org/posts/2018/k8s_pod_lc/
 * Tab 4: https://garba.org/posts/2020/k8s-life-cycle/
 * Tab 5: https://crontab.guru/
@@ -41,9 +41,9 @@ On both Window 0 (BEFORE) and Window 1 (AFTER), set up panes as follows:
 --------------------
 ```
 
-1. Pane 1 - Monitor clusters: `watch gcloud container clusters list`
-2. Pane 2 - Monitor compute: `watch gcloud compute instances list`
-3. Pane 3 - Monitor disks: `watch gcloud compute disks list`
+1. Pane 1 - Monitor clusters: `gcloud container clusters list`
+2. Pane 2 - Monitor compute: `gcloud compute instances list | grep NAME`
+3. Pane 3 - Monitor disks: `gcloud compute disks list | grep NAME`
 4. Pane 4 - Run ad-hoc commands here
 
 ### Window 0 (BEFORE)
@@ -70,6 +70,7 @@ cat create_cluster.sh
 # Copy 
 clear
 # Paste
+./docker_hub_fix.sh # Very Important!
 ```
 
 Press ENTER on panes 1-3 commands after the cluster is created
@@ -83,7 +84,7 @@ Press ENTER on panes 1-3 commands after the cluster is created
 |------------------|
 |        2         |
 |------------------|
-| 3.left | 3.right | 
+|        3         | 
 |------------------|
 |        4         |
 --------------------
@@ -102,7 +103,10 @@ Clear all panes
 ```
 
 Pane 1: `kubectl get -w events`
-Pane 2: `watch -n kubectl top node`
+Pane 2: `watch -n 1 kubectl top node`
+
+**Get back to Window 2 (Main) before starting**
+
 
 ### Student Only
 
@@ -130,21 +134,60 @@ Set a shorter command prompt if useful:
 export PS1='$ '
 ```
 
+## S0.0 About You
+
+---
+
+A warm welcome to Kubernetes on GKE!
+
+Did you know that I used to be an avid traveller? There is a chance that I have visited your country. Let me know. If I haven't visited your country, please mention one worthwhile landmark I should check out! 
+
+- Africa: Egypt, Ghana, Morocco, Tanzania. 
+- Americas: Argentina, Brazil, Canada, Chile, Cuba, Colombia, Costa Rica, Mexico, Paraguay, Peru, United States, Uruguay.
+- Europe: Belgium, Czech Republic, France, Germany, Ireland, Italy, Luxembourg, Netherlands, Portugal, Spain, United Kingdom.
+- Asia: Cambodia, India, Indonesia, Japan, Laos, Singapore, Thailand , Vietnam.
+
+👍 Yes, you've been to my country! \
+😲 You could've visited my country by just crossing the border or taking a ferry! \
+👎 No, you've missed my wonderful country and I will tell you why you should visit. 
+
+---
+
+## S0.0 Q&A
+
+---
+
+I will answer most of your questions during the final Q&A segment, but I may answer a few during the breaks. Please do not use the Q&A button because I will not see the question after the course ends.
+
+Feel free to post questions here as they arise during the course. You are anonymous and there are NO DUMB questions. If I fail to answer during the course, I will try to answer your question on an FAQ that I will make available at https://github.com/egarbarino/safari_gke
+
+I will also ask for feedback at regular intervals.
+
+👍I get it \
+👎Too much work, I just want to sit and watch
+
+---
 
 ## S1.1 Setting up The Google Cloud Shell and GKE
+
+---
+
+I use TMUX to split my terminal session into multiple panes. It comes preinstalled with the Google Cloud Shell, and you can also get it for MacOS and Linux, including Windows Subsystem for Linux (WSL). You can install it by following these instructions: https://github.com/tmux/tmux/wiki/Installing
+
+👍 I use TMUX already. You are preaching to the converted. \
+😲 I don't use TMUX but I definitely want to look into it. \
+👎 I'm not a terminal hacker. I'd rather open multiple terminal windows.
+
+---
 
 ### Access Google Cloud Shell
 
 Browse [https://cloud.google.com/](https://cloud.google.com/) and click on the Google Cloud Shell Icon
 
-### Login If Not Running in Cloud Shell
-
-**Note:** Use Main TMUX Window, not the cluster creation one!
-
-```
-gcloud components install kubectl
-gcloud auth login
-```
+Why Google Cloud Shell?
+* The gcloud command is installed and pre-authenticated
+* kubectl is preinstalled
+* TMUX, python, etc.
 
 ### Set up project
 
@@ -167,6 +210,16 @@ _end of section_
 
 ## S1.2 Creating and Destroying Kubernetes Clusters
 
+---
+
+In Kubernetes everything is an 'object', a so-called 'API resource', or simply 'resource'. Why should you care? Because the same commands and workflows apply to most objects, such as 'kubectl create', 'kubectl delete', 'kubectl get', 'kubectl explain', and so on. But what is an resource? A nested set of attributes, typically displayed (and edited) using either the JSON or YAML formats.
+
+👍 I have both JSON and YAML for breakfast every day \
+😲 I'm shocked. I come from the .ini, .properties, and .xml era. \
+👎 Who are Jason and Yamehl?
+
+---
+
 Cd to `safari_gke/getting_started`
 
 ### Create Cluster (Course)
@@ -182,12 +235,6 @@ ls -la ~/.kube
 gcloud container clusters create my-cluster \
    --zone europe-west2-a \
    --project safari-gke
-```
-
-### Docker Hub Request Limit Fix
-
-```
-./docker_hub_fix.sh
 ```
 
 ### Introduce Nodes and Objects
@@ -214,21 +261,31 @@ gcloud container clusters delete my-cluster --async --quiet --zone europe-west2-
 
 ## S1.3 Launching Docker Containers Using Pods
 
+---
+
+I will run the 'date' command using Kubernetes in a few moments. As 'silly' as this experiment might be, Kubernetes has to go through multiple hoops to achieve this.
+
+- Download the Alpine container image from Docker Hub
+- Wrap the container image in a Pod 
+- Find a worker node that has sufficient CPU and RAM to spin up the Pod
+- Spin up the Pod (creating the virtual file system specified by the underlying container)
+- Execute the 'date' command
+
+👍 No one said distributed computing was easy \
+😲 It's a bit over the top, but it is what it is \
+👎 I don't need Kubernetes to tell what the time is. I have an Apple Watch Series 8. 
+
+
+---
+
 ### Watch Pod Activity
 
 On Main TMUX Window
 
-Pane 1: Run `watch -n 1 kubectl get pod`
-Pane 2: Run `kubectl get -w events`
-Pane 3: Leave empty
-Pane 4: Run commands here
-
-### Using GCR.IO (Student Only)
-
-```
-gcloud container images list --project google-containers
-kubectl run my-pod --image=gcr.io/google-containers/busybox --restart=Never --attach --rm date
-```
+- Pane 1: Run `watch -n 1 kubectl get pod`
+- Pane 2: Run `kubectl get -w events`
+- Pane 3: Leave empty
+- Pane 4: Run commands here
 
 ### Run a Single Command
 
@@ -281,13 +338,6 @@ Run `date` on container
 kubectl exec my-pod -- date
 ```
 
-Run `ls -l` on container
-
-```
-kubectl exec my-pod -- ls -l
-```
-
-
 Open shell
 
 ```
@@ -327,14 +377,19 @@ kubectl port-forward nginx 8080:80
 
 Experiments
 
-- Generate web requests using `curl http://127.0.0.1:8080`
+Generate web requests
+
+```
+curl http://127.0.0.1:8080
+```
+
 - Attach to nginx using `kubectl attach nginx` (and generate more web requests!)
 - Dettach by pressing CTRL+C
 - Destroy Pod
 
 ### Pod Manifest
 
-Kubectl run can be seen as creating a Pod manifst on the fly
+Kubectl run can be seen as creating a Pod manifest on the fly
 
 ```
 kubectl run nginx --image=nginx --restart=Never \
@@ -351,59 +406,7 @@ kubectl run nginx --image=nginx --restart=Never \
 Create (or Apply)
 
 ```
-kubectl create -f /tmp/nginx.yaml
-```
-
-* Copy `ngninx.yaml` to `nginx-clean.yaml`
-* Edit `nginx.yaml` 
-* Note that `status` is empty. 
-* Use `kubectl explain` to understand the meaning of each attribute.
-
-``` yaml
-# nginx-clean.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx
-spec:
-  containers:
-  - image: nginx
-    name: nginx
-```
-
-* Delete runnin nginx using `kubectl delete pod/nginx` or `kubectl delete -f nginx.yaml` before applying
-* Run `kubectl apply -f nginx-clean.yaml`
-
-#### Port Numbers and Environment Variables
-
-* Many applications require settings to be placed in environment variables
-* For example, MYSQL's root password
-
-``` yaml
-# mysql.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: mysql
-spec:
-  containers:
-  - image: mysql
-    name: mysql
-    ports:
-    - containerPort: 3306
-      name: mysql
-      protocol: TCP
-    env:
-    - name: MYSQL_ROOT_PASSWORD
-      value: mypassword
-```
-
-* Run `kubectl apply -f mysql.yaml`
-* Access MYSQL
-
-``` 
-echo "show databases" | kubectl exec -i mysql \
-    -- mysql --password=mypassword
+kubectl apply -f /tmp/nginx.yaml
 ```
 
 _end of session_
@@ -412,81 +415,50 @@ _end of session_
 
 ## S1.4 Managing Pod Life Cycle
 
-### Pod Volumes and Volume Mounts
+---
 
-```
-kubectl explain pod.spec.volumes
-```
+The Pod life cycle is actually rather complex, so I have created a more comprehensive illustration at https://garba.org/article/blog/2018/k8s_pod_lc.pdf 
 
-* `emptyDir` - A temporary file system so that containers within a single Pod can exchange data.
-* `hostPath` - A directory within the Node's file system 
-* A network storage device such as a Google Cloud Storage volume (referred as gcePersistentVolume) or a NFS server.
+👍 I got the PDF file. Thanks. \
+😲 I got the PDF file but, this is overwhelming! \
+👎 The URL is broken. 
 
-#### hostPath 
+---
 
-* It survives the deletion of a Pod but it is tied up to the node
-* There is no guarantee that the Pod will be scheduled to the same node
+### Startup Arrguments, PostStart and PreStop Hooks
 
-#### External Volumes and Google Cloud Storage
-
-Create a disk (scripts: `create_disk.sh` and `delete_disk.sh`)
+Create an external disk first
 
 ```
 gcloud compute disks create my-disk --size=10GB \
     --zone=europe-west2-a
 ```
 
-Declare the volume:
-
-``` yaml
-# alpine-disk.yaml
-...
-spec:
-  volumes:
-    - name: data
-      gcePersistentDisk:
-        pdName: my-disk
-        fsType: ext4
-...
-```
-
-Modify script to display the contents of /data/log.txt
-
-``` yaml
-# alpine-disk.yaml
-...
-spec:
-  containers:
-  - name: alpine
-    image: alpine
-    args:
-    - sh
-    - -c
-    - date >> /data/log.txt; cat /data/log.txt
-...
-```
-
-Apply manifest see log
+Explore 
 
 ```
-kubectl create -f alpine-disk.yaml 
-kubectl logs alpine
+vi life_cycle.yaml
 ```
 
-Experiments
+Notice `lifecycle.postStart` and `lifecycle.preStop`
 
-* Delete cluster (only Pod during live class)
-* See that logs are preserved
-* Watch the creation of Google disks on a different screen
+Apply manifest
 
-### Startup Arrguments, PostStart and PreStop Hooks
+```
+kubectl apply -f life_cycle.yaml
+```
 
-1. View contents of `life_cycle.yaml`
-2. Notice `lifecycle.postStart` and `lifecycle.preStop`
-3. Make sure a disk called my-disk exists (`create_disk.sh`)
-4. Run `kubectl create -f life_cycle.yaml`
-5. Check logs via `kubectl exec -i my-pod -- cat /data/log.txt`
-6. Kill my-pod via `kubectl delete pod/my-pod` and go to step 4
+Check logs
+
+```
+kubectl exec -i life-cycle -- cat /data/log.txt`
+```
+
+Kill life-cycle and apply again
+
+```
+kubectl delete pod/life-cycle
+```
 
 _end of section_
 
@@ -494,16 +466,47 @@ _end of section_
 
 ## S1.5 Implementing Self-Healing Mechanisms
 
+---
+
+The probe life cycle is not that complicated, but it helps to visualise how the various attributes help implemented the intended behaviour. For this, I have another illustration here: https://garba.org/posts/2020/k8s-life-cycle/
+
+👍 I see a bunch of UML Activity diagrams. \
+😲 I see lots of boxes and arrows, I'm a bit scared.
+👎 The URL is broken. 
+
+---
+
 ### Implementing Readiness and Liveness Probes
 
-1. Open `nginx-advanced.yaml`
-2. Run manfiest via `kubectl create -f nginx-advanced.yaml`
-3. Notice the readiness probe's failure
-4. Fix the issue: `kubectl exec -ti pod/nginx -- touch /ready.txt`
-5. Delete index.html: `kubectl exec -ti nginx -- rm /usr/share/nginx/html/index.html`
-6. Notice Pod being restarted
+Explore 
 
-Optional
+```
+vi nginx-self-healing.yaml
+```
+
+Apply manfiest
+
+```
+kubectl apply -f nginx-self-healing.yaml
+```
+
+Notice the readiness probe's failure
+
+Fix the issue
+
+```
+kubectl exec pod/nginx-self-healing -- touch /ready.txt
+```
+
+Delete index.html
+
+```
+kubectl exec nginx-self-healing -- rm /usr/share/nginx/html/index.html
+```
+
+Notice Pod being restarted
+
+_Optional_
 
 Use `kubectl describe pod/nginx` for diagnosis
 

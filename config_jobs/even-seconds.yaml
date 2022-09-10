@@ -4,11 +4,11 @@ kind: Job
 metadata:
   name: even-seconds 
 spec:
-  completions: 6 
-  parallelism: 2 
+  completions: 3
+  parallelism: 3 
   template:
     spec:
-      restartPolicy: Never 
+      restartPolicy: OnFailure
       containers:
       - command:
         - /bin/sh
@@ -21,6 +21,7 @@ spec:
             exit 0;
           else 
             echo FAILURE: $n;
+            sleep 0.3;
             exit 1;
           fi
         name: even-seconds

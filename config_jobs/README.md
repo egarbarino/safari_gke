@@ -2,6 +2,16 @@
 
 ## S3.1 Externalizing Configuration using ConfigMap
 
+---
+
+How are properties, such as database hostnames, are applied to applications in your organization?
+
+👍 As command line flags or environment variables \
+😲 As .ini/.properties files \
+👎 They are hardcoded! 
+
+---
+
 Cd to folder `config_jobs`:
 
 Set up monitoring in different panes
@@ -108,6 +118,16 @@ _end of section_
 
 ## S3.2 Protecting Credentials using Secrets
 
+---
+
+Have you heard of Base 64 before?
+
+👍 Yes, of course \
+😲 I thought it was something to do with email attachments and MIME types \
+👎 Isn't that where some UFO really crashed, as opposed to Area 54?
+
+---
+
 Delete everything
 
 ```
@@ -173,6 +193,16 @@ _end of section_
 
 ## S3.3 Implementing Batch Processes using Jobs
 
+---
+
+Why do you think Jobs are different from Deployments?
+
+👍 Jobs, unlike web servers, are for tasks that ultimately must complete \
+😲 Jobs are for mainframe-like programs \
+👎 Jobs rhyme with 'Insider', or with the founder of a fruit-named company
+
+---
+
 Delete everything on sight
 
 Panel 2: `watch -n 1 kubectl get job`
@@ -236,13 +266,13 @@ Note activity across all panes
 Explore logs
 
 ```
-kubectl logs -l job-name=even-seconds | grep SUCCESS
-kubectl logs -l job-name=even-seconds | grep FAILURE
+kubectl logs -l job-name=even-seconds 
 ```
 
 _end of section_
 
 ### Externally Coordinated Batch Process
+
 
 Delete previous Job
 
@@ -285,6 +315,7 @@ Explore `multiplier.yaml` and note:
 
 ```
 vi multiplier.yaml
+./startQueue.sh
 kubectl apply -f multiplier.yaml
 ```
 
@@ -300,6 +331,16 @@ _end of section_
 ---
 
 ## S3.4 Scheduling Recurring Tasks Using CronJobs
+
+---
+
+Are you familiar with Unix-like cron jobs, or the 'crontab' file? 
+
+👍 Yes, but thank God for https://crontab.guru/ \
+😲 Yes, but I always use other 'scheduling' mechanisms \
+👎 No, is it to do with crony, misbehaved programs?
+
+---
 
 Delete jobs
 

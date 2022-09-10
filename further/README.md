@@ -2,6 +2,16 @@
 
 ## S4.1 Running Server-Wide Services using DaemonSets
 
+---
+
+If you are a Linux user, how would do you define a 'daemon', as opposed to a simple program running in the background? (no wrong answer)
+
+👍 A daemon typically performs services for one or more other programs \
+😲 A daemon is normally started during startup time \
+👎 I'm afraid of ghosts and day-mons. Dee-mons? Not scary.
+
+---
+
 Cd to folder `further`:
 
 Set up monitoring in different panes
@@ -19,7 +29,7 @@ Set up monitoring in different panes
 ```
 
 * Pane 1: `watch -n 1 -w kubectl get pod -o wide` (note -o wide)
-* Pane 2: `watch -n 1 kubectl get deamonset`
+* Pane 2: `watch -n 1 kubectl get daemonset`
 * Pane 3.left: `watch -n 1 kubectl get deployment`
 * Pane 3.right: Leave empty for now
 * Pane 4: `cd ~/safari_gke/further`
@@ -79,7 +89,21 @@ kubectl apply -f logCompressorClient.yaml
 kubectl exec logcd-XXXXXX -- tar -tf /var/log/all-logs-XXXXXXX.tar.gz
 ```
 
+_end of section_
+
+---
+
 ## S4.2 Instrument Stateful Applications using StatefulSets
+
+---
+
+Have you ever installed a database management system all by yourself?
+
+👍 Yes, a SQL database \
+😲 Yes, a noSQL database \
+👎 Haven't you heard of Google Spanner? I prefer managed databases
+
+---
 
 Delete everything
 
@@ -223,6 +247,8 @@ kubectl delete statefulset/server
 kubectl apply -f server-disk.yaml
 ```
 
+_end of segment_
 
+---
 
 

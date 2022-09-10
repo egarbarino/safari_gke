@@ -1,8 +1,8 @@
-# nginx-advanced.yaml
+# nginx-self-healing.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx
+  name: nginx-self-healing
 spec:
   containers:
   - image: nginx
@@ -15,7 +15,7 @@ spec:
       initialDelaySeconds: 15 # Wait before starting the probe
       timeoutSeconds: 1       # Tolerate latency (e.g., slow web server)
       periodSeconds: 15       # How long to wait before polling again
-      failureThreshold: 10    # Number of failures before flagging as not live 
+      failureThreshold: 3    # Number of failures before flagging as not live 
       successThreshold: 1     # Number of successes before clearing failure count 
     livenessProbe:
       httpGet:
@@ -24,6 +24,6 @@ spec:
       initialDelaySeconds: 5 # Wait before starting the probe
       timeoutSeconds: 1      # Tolerate latency (e.g., slow web server)
       periodSeconds: 10      # How long to wait before polling again
-      failureThreshold: 5    # Number of failures before flagging as not live 
+      failureThreshold: 3    # Number of failures before flagging as not live 
       successThreshold: 1    # Number of successes before clearing failure count     
   restartPolicy: Always

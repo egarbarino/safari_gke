@@ -2,6 +2,18 @@
 
 ## S2.1 Launching Deployments
 
+---
+
+In a few moments, we will see that even though Deployments control ReplicaSets, and ReplicaSets control Pods, neither ReplicaSets nor Pods are declared separately. Both ReplicaSets and Pods are 'spawned' from a single Deployment manifest or imperative 'kubectl create deployment' command.
+
+Wait a couple of minutes, and let me know your opinion about Deployments.
+
+👍 It is a mechanism to define both scaling and image versioning properties applicable to a fleet of Pods \
+😲 I should have been called 'Scaling', 'Version' controller, or 'ScalingVersion' controller \
+👎 I was so happy with simple naked Pods
+
+---
+
 Cd to folder `ha_and_hs`:
 
 Set up monitoring in different panes
@@ -50,22 +62,6 @@ Update the pod's image
 kubectl set image deploy/nginx nginx=nginx:1.9.1
 ```
 
-### Deployment Manifest
-
-Open `simpleDeployment.yaml`
-
-Note the following:
-
-* Pod description is embeded under `template`
-* Note replicas
-* Note `selector.matchLabels` and relationship with Pod
-
-Create deployment and note simlar result as `kubectl create deployment create ...`
-
-```
-kubectl apply -f simpleDeployment.yaml
-```
-
 _end of section_
 
 Further details at: https://garba.org/posts/2020/k8s-life-cycle/
@@ -73,6 +69,17 @@ Further details at: https://garba.org/posts/2020/k8s-life-cycle/
 ---
 
 ## S2.2 Rolling and Blue/Green Deployments
+
+---
+
+Do you have experience with traditional blue/green deployments in bare metal data centers? https://martinfowler.com/bliki/BlueGreenDeployment.html
+
+👍 Yes, this is how we do things at work \
+😲 I believe it is something that some enterprises do to minimise downtime \
+👎 First time I’m learning about blue/green deployments but I'll check the link
+
+
+---
 
 Delete previous deployments:
 
@@ -127,29 +134,17 @@ Further details at: https://garba.org/posts/2020/k8s-life-cycle/
 ---
 
 
-## S2.3 Rolling Back Deployments
-
-Note: This section assumes that the nginx deployment updates launched in the previous sections are still active:
-
-Pane 3.right: `watch kubectl rollout history deploy/nginx-declarative`
-
-Undo the last deployment
-
-```
-kubectl rollout undo deploy/nginx-declarative
-```
-
-Undo to a specific revision:
-
-```
-kubectl rollout undo deploy/nginx-declarative --to-revision=2
-```
-
-_end of section_
+## S2.3 Instrumenting Static Scaling and Autoscaling
 
 ---
 
-## S2.4 Instrumenting Static Scaling and Autoscaling
+What does come to mind when you hear the word 'auto-scaling'?
+
+👍 Many Pods popping up like Gremlins \
+😲 Not having to worry during peak periods such as Black Friday \
+👎 A threat to my 'load forecasting' job
+
+---
 
 Delete everything and launch a new deployment
 
@@ -175,13 +170,6 @@ Now launch an autoscaler against the nginx deployment
 kubectl autoscale deployment/nginx-declarative --min=1 --max=3 --cpu-percent=5
 ```
 
-Explore declarative version too (note that this version defines 2 replicas!)
-
-```
-vi hpa.yaml
-kubectl apply -f hpa.yaml
-```
-
 #### Spiking CPU Internally
 
 Generate infinite loop to spike the CPU and see auto-scaling in action. Ensure you pick the name of an actual Pod, rather than the one used below.
@@ -196,61 +184,23 @@ Inside Pod type this:
 while true; do true; done
 ```
 
-#### Spiking CPU Externally (Student Homework)
-
-Install Apache Bench
-
-```
-sudo apt-get update
-sudo apt-get install apache2-utils
-```
-
-Expose the other Pod's TCP port (new window rather than pane)
-
-```
-kubectl port-forward nginx-XXXXX-XX 1080:80
-```
-
-Generate one million requests against it:
-
-```
-ab -n 1000000 -c 100 http://localhost:1080
-```
-
-### Cluster-wise Scaling (Student Homework)
-
-* Understand that the trigger is insufficient Pod resources rather than CPU (book)
-
-Create a new cluster with auto-scaling enabled
-
-```
-gcloud container clusters create scalable-cluster \
-    --num-nodes=3 \ 
-    --enable-autoscaling \
-    --min-nodes 3 \ 
-    --max-nodes 6
-```
-
-Create a significant number of nodes:
-
-```
-kubectl run nginx --image=nginx --replicas=30
-```
-
-See the cluster auto-scale:
-
-```
-watch kubectl get nodes
-```
-
 _end of section_
 
 ---
 
-## S2.5 Understanding Service Discovery Use Cases
+## S2.4 Pod-to-Pod Access
 
+---
 
-### Pod-to-Pod Use Case
+A service controller is the mechanism by which Kubernetes creates a 'load balancer', or a 'round robin' mechanism to access a fleet of Pods. 
+
+Why do you think the Pod-to-Pod use case is relevant?
+
+👍 In the 'microservices' age, most applications consist of various interconnected Pods \
+😲 I'm surprised that even internal Pods may come as 'fleets' \
+👎 It is much easier to interconnect monolithic Pods with hard-coded IP addresses
+
+---
 
 Delete all previous deployments and Pods
 
@@ -261,7 +211,7 @@ kubectl delete all --all
 Pane 3.right:
 
 ```
-watch -n1 kubectl get service
+watch -n 1 kubectl get service
 ```
 
 Create an Nginx deployment
@@ -294,7 +244,7 @@ Access nginx from a new Pod
 ```
 kubectl run test --rm -ti --image=alpine --restart=Never -- sh
 
-cwget -q -O - http://nginx 
+wget -q -O - http://nginx 
 wget -q -O - http://nginx2 
 ```
 
@@ -304,8 +254,19 @@ _end of section_
 
 ---
 
+## S2.5 Publishing Services on the Public Internet
 
-## Publishing Services on the Public Internet
+---
+
+The Service controller implements a soft 'load balancer' as far as round robin is concerned, but the 'Internet to Pod' use case, necesites the interaction with the actual Google Cloud Platform's 'load balancer' resource (and underlying network infrastructure). 
+
+Why do you think this is?
+
+👍 Because traffic needs to flow from the public internet into GCP, and then into GKE (within GCP) \
+😲 Because assigning public IP addresses falls outside the scope of Kubernetes \
+👎 I thought Kubernetes was fully self-contained and portable across all clouds
+
+---
 
 Pane 3.left:
 
@@ -325,91 +286,21 @@ Now try public IP address:
 while true; do curl -s http://IP_ADDRESS ; sleep 1 ; done
 ```
 
-
-### Publish Services on the Public Internet (Student Only)
-
-Explore `serviceLoadBalancer.yaml` and apply it
-
-```
-vi 
-kubectl create -f serviceLoadBalancer.yaml
-```
-
-Wait for the external IP to be seen on the pane in which `kubectl get service` is being refreshed
-
 _end of section_
 
 ---
 
-## Canary and Zero Downtime Releases
+## S2.6 Zero Downtime Releases
 
+---
 
-### Canary
+What is the most important thing, in your opinion, for the release of a new application version? (No right answer!)
 
-Kill previous deployments
+👍 That once the user lands on the new version, they stay on it
+😲 That the user never experiences downtime even though they may intermittently see two different versions
+👎 Nothing. I prefer large downtime windows on Sunday nights.
 
-```
-kubectl delete all --all
-```
-
-On pane 1:
-
-```
-kubectl get pods -L prod -o wide
-```
-
-Create a deployment and apply label prod=true:
-
-```
-kubectl create deployment v1 --image=nginx --port=80 --replicas=3 
-kubectl label pod prod=true --all
-```  
-
-Explore and apply manifest (note label selector)
-
-```
-vi myservice.yaml
-kubectl apply -f myservice.yaml
-```
-
-On pane 3.left:
-
-```
-./watch.sh myservice
-```
-
-On panel 3.right
-
-```
-watch -n 1 "kubectl get endpoints/myservice -o yaml | grep ip" 
-```
-
-Create new deployment:
-
-```
-kubectl create deployment v2 --image=httpd --port=80 --replicas=3 
-```
-
-Note that `prod=false`
-
-Pick a random Pod and change its label to `prod=true`:
-
-```
-kubectl label pod/NAME prod=true --overwrite
-kubectl label pod prod=true -l \!prod
-```
-
-Notice that one IP address will have joined `myservice`
-
-Keep changing the label of Pods until all of them have `prod=true`
-
-Delete the old nginx deployment so that requests are only served by v2
-
-```
-kubectl delete deployment/v1
-```
-
-### Zero-downtime Deployments
+---
 
 Delete all previous deployments and services
 
