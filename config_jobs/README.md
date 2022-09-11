@@ -1,20 +1,6 @@
 # S3 Configuration and Jobs
 
-## S3.1 Externalizing Configuration using ConfigMap
-
----
-
-How are properties, such as database hostnames, are applied to applications in your organization?
-
-👍 As command line flags or environment variables \
-😲 As .ini/.properties files \
-👎 They are hardcoded! 
-
----
-
-Cd to folder `config_jobs`:
-
-Set up monitoring in different panes
+Segment TMUX Setup
 
 ```
 |------------------|
@@ -28,17 +14,49 @@ Set up monitoring in different panes
 --------------------
 ```
 
-* Pane 1: `watch -n 1 kubectl get pod` (override if running with -o wide)
-* Pane 2: `watch -n 1 kubectl get configmap`
-* Pane 3.left: Leave empty for now
-* Pane 3.right: Leave empty for now
-* Pane 4: ad-hoc commands
+Pane 1
+
+```
+watch -n 1 kubectl get pod
+```
+
+Pane 2
+
+```
+watch -n 1 kubectl get configmap
+```
+
+Pane 3.left: Leave empty for now
+
+Pane 3.right: Leave empty for now
+
+Pane 4
+
+```
+cd ~/safari_gke/config_jobs/
+```
+
+## S3.1 Externalizing Configuration using ConfigMap
+
+```
+How are properties, such as database hostnames, are applied to applications in your organization?
+```
+
+```
+👍 As command line flags or environment variables 😲 As .ini/.properties files 👎 They are hardcoded 
+```
 
 ### Example of Hard Coded Configuration
 
 ```
 vi podHardCodedEnv.yaml
+```
+
+```
 kubectl apply -f podHardCodedEnv.yaml
+```
+
+```
 kubectl logs pod/my-pod
 ```
 
@@ -47,7 +65,13 @@ kubectl logs pod/my-pod
 
 ```
 vi simpleconfigmap.yaml
+```
+
+```
 kubectl apply -f simpleconfigmap.yaml
+```
+
+```
 kubectl describe configmap/data-sources
 ```
 
@@ -61,11 +85,22 @@ Delete Old Pod
 kubectl delete pod/my-pod
 ```
 
-Explore, apply, and check logs:
+Explore
+
 
 ```
 vi podWithConfigMapReference.yaml
+```
+
+Apply
+
+```
 kubectl apply -f podWithConfigMapReference.yaml
+```
+
+Check logs
+
+```
 kubectl logs pod/my-pod
 ```
 
@@ -79,23 +114,33 @@ vi podManifest.yaml
 
 ### Live Configuration Changes using Virtual File System
 
-Delete everything
+Pane 3.right: Delete everything
 
 ```
 kubectl delete all --all
 ```
 
-Explore and appy new config map
+Explore
 
 ```
 vi configMapLongText.yaml
+```
+
+Apply
+
+```
 kubectl apply -f configMapLongText.yaml
 ```
 
-Explore `volume`, `volumeMounts`, then apply, and check logs:
+Explore `volume`, `volumeMounts`
 
 ```
 vi podManifestVolume.yaml
+```
+
+Apply 
+
+```
 kubectl apply -f podManifestVolume.yaml
 ```
 
@@ -105,10 +150,15 @@ Pane 3.left:
 kubectl logs -f pod/my-pod
 ```
 
-Explore and apply new ConfigMap:
+Explore 
 
 ```
 vi configMapLongText_changed.yaml
+```
+
+Apply
+
+```
 kubectl apply -f configMapLongText_changed.yaml
 ```
 
@@ -118,17 +168,15 @@ _end of section_
 
 ## S3.2 Protecting Credentials using Secrets
 
----
-
+```
 Have you heard of Base 64 before?
+```
 
-👍 Yes, of course \
-😲 I thought it was something to do with email attachments and MIME types \
-👎 Isn't that where some UFO really crashed, as opposed to Area 54?
+```
+👍 Yes, of course 😲 I thought it was something to do with email attachments and MIME types 👎 Isn't Base 64 where some UFO crashed, as opposed to Area 54?
+```
 
----
-
-Delete everything
+Pane 3.right: Delete everything
 
 ```
 kubectl delete all --all
@@ -160,12 +208,21 @@ kubectl create secret generic my-secrets \
 
 ```
 echo -n ernie | base64
+```
+
+```
 echo -n HushHush | base64
 ```
 
 ```
 kubectl delete secret/my-secrets
+```
+
+```
 vi secrets/secretManifest.yaml
+```
+
+```
 kubectl apply -f secrets/secretManifest.yaml
 ```
 
@@ -173,7 +230,13 @@ kubectl apply -f secrets/secretManifest.yaml
 
 ```
 vi secrets/podManifestFromEnv.yaml
+```
+
+```
 kubectl apply -f secrets/podManifestFromEnv.yaml
+```
+
+```
 kubectl logs pod/my-pod
 ```
 
@@ -193,20 +256,31 @@ _end of section_
 
 ## S3.3 Implementing Batch Processes using Jobs
 
----
-
+```
 Why do you think Jobs are different from Deployments?
+```
 
-👍 Jobs, unlike web servers, are for tasks that ultimately must complete \
-😲 Jobs are for mainframe-like programs \
-👎 Jobs rhyme with 'Insider', or with the founder of a fruit-named company
+```
+👍 Jobs, unlike web servers, are for tasks that ultimately must complete 😲 Jobs are for mainframe-like programs 👎 Jobs rhyme with 'Insider', or with the founder of a fruit-named company
+```
 
----
+Pane 4
 
-Delete everything on sight
+```
+kubect delete all --all
+```
 
-Panel 2: `watch -n 1 kubectl get job`
-Panel 3.right: `kubectl get -w job`
+Pane 2
+
+```
+watch -n 1 kubectl get job
+```
+
+Pane 3.right
+
+```
+kubectl get -w job
+```
 
 ### Single Batch Process
 
@@ -274,7 +348,7 @@ _end of section_
 ### Externally Coordinated Batch Process
 
 
-Delete previous Job
+Pane 3.left:
 
 ```
 kubectl delete job --all
@@ -286,10 +360,11 @@ Explore queue and **note** `--expose`:
 
 ```
 vi startQueue.sh
-./startQueue.sh
 ```
 
-
+```
+./startQueue.sh
+```
 
 Test queue
 
@@ -298,24 +373,33 @@ kubectl run test --rm -ti --image=alpine \
     --restart=Never -- sh
 ```
 
-Inside Pod:
+Inside Pod: Try a few times and then exit
 
 ```
 nc -w 1 queue 1080
-nc -w 1 queue 1080
-nc -w 1 queue 1080
-nc -w 1 queue 1080
-exit
 ```
 
-Explore `multiplier.yaml` and note:
+Explore 
+
+```
+vi multiplier.yaml
+```
+
+Note:
 
 * The attribute `spec.completion` is left empty
 * The attribute `spec.parallelism` is set to 3
 
+
+Restart Queue by running again:
+
 ```
-vi multiplier.yaml
 ./startQueue.sh
+```
+
+Apply Multiplier
+
+```
 kubectl apply -f multiplier.yaml
 ```
 
@@ -323,6 +407,9 @@ Explore results and note that `--tail=-1` is to override the label selector's li
 
 ```
 kubectl logs -l job-name=multiplier --tail=-1 | wc
+```
+
+```
 kubectl logs -l job-name=multiplier --tail=-1 | sort -g
 ```
 
@@ -332,17 +419,15 @@ _end of section_
 
 ## S3.4 Scheduling Recurring Tasks Using CronJobs
 
----
-
+```
 Are you familiar with Unix-like cron jobs, or the 'crontab' file? 
+```
 
-👍 Yes, but thank God for https://crontab.guru/ \
-😲 Yes, but I always use other 'scheduling' mechanisms \
-👎 No, is it to do with crony, misbehaved programs?
+```
+👍 Yes, but thank God for https://crontab.guru/ 😲 Yes, but I always use other 'scheduling' mechanisms 👎 No, is it to do with crony, misbehaved programs?
+```
 
----
-
-Delete jobs
+Pane 3.right: Delete jobs
 
 ```
 kubectl delete job --all
@@ -365,6 +450,9 @@ Note imperative version using `kubectl create cronjob --help`
 
 ```
 vi simple.yaml
+```
+
+```
 kubectl apply -f simple.yaml
 ```
 

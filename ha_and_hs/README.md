@@ -1,5 +1,6 @@
 # S2 High Availability and High Scalability
 
+Segment TMUX Setup
 
 ```
 |------------------|
@@ -33,7 +34,7 @@ watch -n 1 kubectl get deployment
 
 Pane 3.right: Leave empty for now
 
-Panel 4: 
+Panel 4
 
 ```
 cd ~/safari_gke/ha_and_hs/
@@ -194,7 +195,7 @@ Note: We assume that the previous nginx deployment is still running
 Pane 3.right
 
 ```
-watch -n 1 kubectl get hpa`
+watch -n 1 kubectl get hpa
 ```
 
 Now launch an autoscaler against the nginx deployment
@@ -366,7 +367,7 @@ cd ~/safari_gke/ha_and_hs/
 ```
 
 ```
-./watch.sh site
+cat watch.sh ; sleep 10 ; ./watch.sh site
 ```
 
 Change base image
