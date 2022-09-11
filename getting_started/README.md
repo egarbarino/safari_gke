@@ -193,15 +193,13 @@ I will answer most of your questions during the final Q&A segment, but I may ans
 
 ## S1.1 Setting up The Google Cloud Shell and GKE
 
----
-
+```
 I use TMUX to split my terminal session into multiple panes. It comes preinstalled with the Google Cloud Shell, and you can also get it for MacOS and Linux, including Windows Subsystem for Linux (WSL). You can install it by following these instructions: https://github.com/tmux/tmux/wiki/Installing
+```
 
-👍 I use TMUX already. You are preaching to the converted. \
-😲 I don't use TMUX but I definitely want to look into it. \
-👎 I'm not a terminal hacker. I'd rather open multiple terminal windows.
-
----
+```
+👍 I use TMUX already. You are preaching to the converted. 😲 I don't use TMUX but I definitely want to look into it 👎 I'm not a terminal hacker. I'd rather open multiple terminal windows.
+```
 
 ### Access Google Cloud Shell
 
@@ -211,6 +209,7 @@ Why Google Cloud Shell?
 * The gcloud command is installed and pre-authenticated
 * kubectl is preinstalled
 * TMUX, python, etc.
+* Closer to IaC
 
 ### Set up project
 
@@ -233,78 +232,58 @@ _end of section_
 
 ## S1.2 Creating and Destroying Kubernetes Clusters
 
----
-
+```
 In Kubernetes everything is an 'object', a so-called 'API resource', or simply 'resource'. Why should you care? Because the same commands and workflows apply to most objects, such as 'kubectl create', 'kubectl delete', 'kubectl get', 'kubectl explain', and so on. But what is an resource? A nested set of attributes, typically displayed (and edited) using either the JSON or YAML formats.
-
-👍 I have both JSON and YAML for breakfast every day \
-😲 I'm shocked. I come from the .ini, .properties, and .xml era. \
-👎 Who are Jason and Yamehl?
-
----
-
-Cd to `safari_gke/getting_started`
-
-### Create Cluster (Course)
-
-```
-vi create_cluster.sh
-ls -la ~/.kube
 ```
 
-### Create Cluster (Student Only)
+```
+👍 I eat both JSON and YAML for breakfast every day 😲 I'm shocked. I come from the .ini, .properties, and .xml era. 👎 Who are Jason and Yamehl?
+```
+
+### Cluster Creation and Deletion
+
+Step 1 - Switch to Window 0 (and explore `gcloud container clusters ...`
+
+Step 2 - Switch to Window 1 
+
+Step 3 - Understand (but do not run!) cluster deletion
 
 ```
-gcloud container clusters create my-cluster \
-   --zone europe-west2-a \
-   --project safari-gke
+gcloud container clusters delete my-cluster \
+	--async \
+	--quiet \
+	--zone europe-west2-a
 ```
 
 ### Introduce Nodes and Objects
 
-* Everything is an object
+Everything is an object
 
 ```
-kubectl version --short
 kubectl get node
-kubectl get node -o wide
-kubectl explain node
+```
+
+```
 kubectl get node/XXX -o yaml
 ```
 
-### Destroy Cluster
-
-Scripts: `delete_cluster.sh`
-
-Destroy Kubernetes cluster (Student Only)
+```
+kubectl explain node
+```
 
 ```
-gcloud container clusters delete my-cluster --async --quiet --zone europe-west2-a
+kubectl delete node/XXX
 ```
 
 ## S1.3 Launching Docker Containers Using Pods
 
----
+```
+I will run the 'date' command using Kubernetes in a few moments.
+```
 
-I will run the 'date' command using Kubernetes in a few moments. As 'silly' as this experiment might be, Kubernetes has to go through multiple hoops to achieve this.
-
-- Download the Alpine container image from Docker Hub
-- Wrap the container image in a Pod 
-- Find a worker node that has sufficient CPU and RAM to spin up the Pod
-- Spin up the Pod (creating the virtual file system specified by the underlying container)
-- Execute the 'date' command
-
-👍 No one said distributed computing was easy \
-😲 It's a bit over the top, but it is what it is \
-👎 I don't need Kubernetes to tell what the time is. I have an Apple Watch Series 8. 
-
-
----
-
-### Watch Pod Activity
-
-deleted
-
+```
+👍 Simpler than 'Hello World' 😲 I didn't know Kubernetes could tell the time 👎 I don't need Kubernetes to tell what the time is. I have an Apple Watch Series 8. 
+```
 
 ### Run a Single Command
 
@@ -382,19 +361,17 @@ Prove that is it a steady Pod like any other
 kubectl exec nginx -- date
 ```
 
-Pane 2: Watch logs
+Pane 3.left: Watch logs
 
 ```
 kubectl logs -f nginx
 ```
 
-Pane 3: Establish port-forwarding
+Pane 3.right: Establish port-forwarding
 
 ```
 kubectl port-forward nginx 8080:80
 ```
-
-Experiments
 
 Generate web requests
 
@@ -402,11 +379,23 @@ Generate web requests
 curl http://127.0.0.1:8080
 ```
 
+Further experiments:
+
 - Attach to nginx using `kubectl attach nginx` (and generate more web requests!)
 - Dettach by pressing CTRL+C
 - Destroy Pod
 
 ### Pod Manifest
+
+Panel 3.left: Stop and clear
+
+Panel 3.right: Stop and clear
+
+Panel 4
+
+```
+kubectl delete pod/nginx
+```
 
 Kubectl run can be seen as creating a Pod manifest on the fly
 
@@ -422,7 +411,7 @@ kubectl run nginx --image=nginx --restart=Never \
     --dry-run=client -o yaml > /tmp/nginx.yaml
 ```  
 
-Create (or Apply)
+Apply
 
 ```
 kubectl apply -f /tmp/nginx.yaml
@@ -434,19 +423,23 @@ _end of session_
 
 ## S1.4 Managing Pod Life Cycle
 
----
-
+```
 The Pod life cycle is actually rather complex, so I have created a more comprehensive illustration at https://garba.org/article/blog/2018/k8s_pod_lc.pdf 
+```
 
-👍 I got the PDF file. Thanks. \
-😲 I got the PDF file but, this is overwhelming! \
-👎 The URL is broken. 
-
----
+```
+👍 I got the PDF file. Thanks 😲 I got the PDF file but, this is overwhelming! 👎 The URL is broken. 
+```
 
 ### Startup Arrguments, PostStart and PreStop Hooks
 
-Create an external disk first
+Pane 3.left:
+
+```
+watch -n 1 "gcloud compute disks list | grep NAME"
+```
+
+Pane 4: Create an external disk first
 
 ```
 gcloud compute disks create my-disk --size=10GB \
@@ -485,15 +478,13 @@ _end of section_
 
 ## S1.5 Implementing Self-Healing Mechanisms
 
----
-
+```
 The probe life cycle is not that complicated, but it helps to visualise how the various attributes help implemented the intended behaviour. For this, I have another illustration here: https://garba.org/posts/2020/k8s-life-cycle/
+```
 
-👍 I see a bunch of UML Activity diagrams. \
-😲 I see lots of boxes and arrows, I'm a bit scared.
-👎 The URL is broken. 
-
----
+```
+👍 I see a bunch of UML Activity diagrams 😲 I see lots of boxes and arrows, I'm a bit scared 👎 The URL is broken. 
+```
 
 ### Implementing Readiness and Liveness Probes
 
@@ -509,9 +500,7 @@ Apply manfiest
 kubectl apply -f nginx-self-healing.yaml
 ```
 
-Notice the readiness probe's failure
-
-Fix the issue
+Notice the readiness probe's failure and fix the issue
 
 ```
 kubectl exec pod/nginx-self-healing -- touch /ready.txt
