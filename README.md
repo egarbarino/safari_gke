@@ -33,7 +33,7 @@ the directly executable scripts.
 * [S4 | Further Topics](further/README.md)
     * DeamonSet Controller
     * StatefulSet Controller
-* [S5 | FAQ](faq/RADME.md)
+* [S5 | FAQ](faq/README.md)
     * WIP
 
 

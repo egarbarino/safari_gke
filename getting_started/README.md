@@ -8,9 +8,7 @@ Main Browser
 
 * Tab 1: https://console.cloud.google.com
 * Tab 2: https://shell.cloud.google.com/?show=terminal
-* Tab 3: https://garba.org/posts/2018/k8s_pod_lc/
-* Tab 4: https://garba.org/posts/2020/k8s-life-cycle/
-* Tab 5: https://crontab.guru/
+* Tab 3: https://crontab.guru/
 
 Secondary Browser
 
@@ -102,8 +100,8 @@ Clear all panes
 |------------------|
 ```
 
-Pane 1: `kubectl get -w events`
-Pane 2: `watch -n 1 kubectl top node`
+* Pane 1: `kubectl get -w events`
+* Pane 2: `watch -n 1 kubectl top node`
 
 **Get back to Window 2 (Main) before starting**
 
@@ -136,37 +134,35 @@ export PS1='$ '
 
 ## S0.0 About You
 
----
-
+```
 A warm welcome to Kubernetes on GKE!
 
-Did you know that I used to be an avid traveller? There is a chance that I have visited your country. Let me know. If I haven't visited your country, please mention one worthwhile landmark I should check out! 
-
+Did you know that I used to be an avid traveller? There is a chance that I have visited your country:
+ 
 - Africa: Egypt, Ghana, Morocco, Tanzania. 
 - Americas: Argentina, Brazil, Canada, Chile, Cuba, Colombia, Costa Rica, Mexico, Paraguay, Peru, United States, Uruguay.
 - Europe: Belgium, Czech Republic, France, Germany, Ireland, Italy, Luxembourg, Netherlands, Portugal, Spain, United Kingdom.
 - Asia: Cambodia, India, Indonesia, Japan, Laos, Singapore, Thailand , Vietnam.
 
-👍 Yes, you've been to my country! \
-😲 You could've visited my country by just crossing the border or taking a ferry! \
+👍 Yes, you've been to my country! 
+😲 You could've visited my country by just crossing the border or taking a ferry! 
 👎 No, you've missed my wonderful country and I will tell you why you should visit. 
 
----
+If I haven't visited your country, please mention one worthwhile landmark I should check out!
+```
 
 ## S0.0 Q&A
 
----
-
+```
 I will answer most of your questions during the final Q&A segment, but I may answer a few during the breaks. Please do not use the Q&A button because I will not see the question after the course ends.
 
 Feel free to post questions here as they arise during the course. You are anonymous and there are NO DUMB questions. If I fail to answer during the course, I will try to answer your question on an FAQ that I will make available at https://github.com/egarbarino/safari_gke
 
 I will also ask for feedback at regular intervals.
 
-👍I get it \
+👍I get it
 👎Too much work, I just want to sit and watch
-
----
+```
 
 ## S1.1 Setting up The Google Cloud Shell and GKE
 
