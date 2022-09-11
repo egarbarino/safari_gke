@@ -207,15 +207,15 @@ kubectl create secret generic my-secrets \
 ### Declarative Form
 
 ```
+kubectl delete secret/my-secrets
+```
+
+```
 echo -n ernie | base64
 ```
 
 ```
 echo -n HushHush | base64
-```
-
-```
-kubectl delete secret/my-secrets
 ```
 
 ```
