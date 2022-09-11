@@ -9,6 +9,8 @@ Main Browser
 * Tab 1: https://console.cloud.google.com
 * Tab 2: https://shell.cloud.google.com/?show=terminal
 * Tab 3: https://crontab.guru/
+* Tab 4: https://garba.org/posts/2018/k8s_pod_lc/
+* Tab 5: https://garba.org/posts/2020/k8s-life-cycle/
 
 On Tab 2 (Google Cloud Shell)
 
@@ -188,7 +190,7 @@ I will answer most of your questions during the final Q&A segment, but I may ans
 ```
 
 ```
-👍I get it 👎Too much work, I just want to sit and watch
+👍I get it 👎 Too much work, I just want to sit and watch
 ```
 
 ## S1.1 Setting up The Google Cloud Shell and GKE
@@ -217,7 +219,11 @@ Why Google Cloud Shell?
 gcloud config set project safari-gke
 ```
 
-Note: You may add it to `~/.bashrc`
+You may add it to `~/.bashrc`
+
+```
+tail ~/.bashrc
+```
 
 ### Enable Container Service
 
@@ -322,6 +328,12 @@ and will need to be killed with `kubectl delete pod/my-pod`
 kubectl run my-pod --image=alpine sh 
 ```
 
+Delete it!
+
+```
+kubectl delete pod/my-pod
+```
+
 **This works instead**
 
 This will leave Pod running in the background
@@ -387,11 +399,11 @@ Further experiments:
 
 ### Pod Manifest
 
-Panel 3.left: Stop and clear
+Pane 3.left: Stop and clear
 
-Panel 3.right: Stop and clear
+Pane 3.right: Stop and clear
 
-Panel 4
+Pane 4
 
 ```
 kubectl delete pod/nginx
@@ -463,7 +475,7 @@ kubectl apply -f life_cycle.yaml
 Check logs
 
 ```
-kubectl exec -i life-cycle -- cat /data/log.txt`
+kubectl exec -i life-cycle -- cat /data/log.txt
 ```
 
 Kill life-cycle and apply again
