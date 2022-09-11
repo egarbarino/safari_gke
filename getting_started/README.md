@@ -10,10 +10,6 @@ Main Browser
 * Tab 2: https://shell.cloud.google.com/?show=terminal
 * Tab 3: https://crontab.guru/
 
-Secondary Browser
-
-https://shell.cloud.com/?show=ide
-
 On Tab 2 (Google Cloud Shell)
 
 Create three TMUX Windows (CTRL+B C) and name them (CTRL+B ,) as follows:
@@ -23,7 +19,7 @@ Create three TMUX Windows (CTRL+B C) and name them (CTRL+B ,) as follows:
 3. Main
 4. Debugging
 
-### Windows 0 and 1
+### Windows 0 (BEFORE) and 1 (AFTER)
 
 On both Window 0 (BEFORE) and Window 1 (AFTER), set up panes as follows:
 
@@ -39,42 +35,62 @@ On both Window 0 (BEFORE) and Window 1 (AFTER), set up panes as follows:
 --------------------
 ```
 
-1. Pane 1 - Monitor clusters: `gcloud container clusters list`
-2. Pane 2 - Monitor compute: `gcloud compute instances list | grep NAME`
-3. Pane 3 - Monitor disks: `gcloud compute disks list | grep NAME`
-4. Pane 4 - Run ad-hoc commands here
+**Note:** Do not run any of the commands yet
+
+Pane 1 - Monitor clusters
+
+```
+gcloud container clusters list
+```
+
+Pane 2 - Monitor compute
+
+```
+gcloud compute instances list | grep NAME
+```
+
+Pane 3 - Monitor disks
+
+```
+gcloud compute disks list | grep NAME
+```
+
+Pane 4 - Cluster Create Command
+
+```
+gcloud container clusters delete my-cluster \
+	--async \
+	--quiet \
+	--zone europe-west2-a
+```
 
 ### Window 0 (BEFORE)
 
-Clear all panes and DO NOT PRESS Enter for commands
-
-Pane 4
-
-```
-cd safari_gke/getting_started
-cat create_cluster.sh
-# Copy 
-clear
-# Paste without pressing ENTER
-```
+Run only the commands on Panes 1-3 but **not** on Pane 4
 
 ### Window 1 (AFTER)
 
-Pane 4
+Step 1
+
+Run the `kubectl container clusters create ...` command on Pane 4 and wait until it completes.
+
+Step 2
+
+Run the commands that you pasted on Panes 2-3
+
+Step 3
+
+Run the Docker Hub fix on Window 2 (MAIN):
 
 ```
-cd safari_gke/getting_started
-cat create_cluster.sh
-# Copy 
-clear
-# Paste
-./docker_hub_fix.sh # Very Important!
+cd ~/safari_gke/getting_started/
 ```
 
-Press ENTER on panes 1-3 commands after the cluster is created
+```
+./docker_hub_fix.sh
+```
 
-### Window 3 (Main)
-
+### Window 2 (Main)
 
 ```
 |------------------|
@@ -88,9 +104,24 @@ Press ENTER on panes 1-3 commands after the cluster is created
 --------------------
 ```
 
-Clear all panes
+Pane 1: Monitor Pod activity
 
-### Window 4 (Debugging)
+```
+watch -n 1 kubectl get pod
+```
+
+Pane 2: Monitor events
+
+```
+kubectl get -w events
+```
+
+Pane 3: Leave empty
+
+Pane 4: Run commands here
+
+
+### Window 3 (Debugging)
 
 ```
 |------------------|
@@ -100,11 +131,19 @@ Clear all panes
 |------------------|
 ```
 
-* Pane 1: `kubectl get -w events`
-* Pane 2: `watch -n 1 kubectl top node`
+Pane 1 - Monitor Events
+
+```
+kubectl get -w events
+```
+
+Pane 2: - Watch Node Activity
+
+```
+watch -n 1 kubectl top node
+```
 
 **Get back to Window 2 (Main) before starting**
-
 
 ### Student Only
 
@@ -135,33 +174,21 @@ export PS1='$ '
 ## S0.0 About You
 
 ```
-A warm welcome to Kubernetes on GKE!
+A warm welcome to Kubernetes on GKE! Did you know that I used to be an avid traveller? There is a chance that I have visited your country: Argentina, Belgium, Brazil, Cambodia, Canada, Chile, Cuba, Colombia, Costa Rica, Czech Republic, Egypt, France, Germany, Ghana, India, Indonesia, Ireland, Italy, Japan, Luxembourg, Mexico, Morocco, Netherlands, Paraguay, Peru, Portugal, Singapore, Spain, Tanzania, Thailand, United States, United Kingdom, Uruguay, Vietnam.
+```
 
-Did you know that I used to be an avid traveller? There is a chance that I have visited your country:
- 
-- Africa: Egypt, Ghana, Morocco, Tanzania. 
-- Americas: Argentina, Brazil, Canada, Chile, Cuba, Colombia, Costa Rica, Mexico, Paraguay, Peru, United States, Uruguay.
-- Europe: Belgium, Czech Republic, France, Germany, Ireland, Italy, Luxembourg, Netherlands, Portugal, Spain, United Kingdom.
-- Asia: Cambodia, India, Indonesia, Japan, Laos, Singapore, Thailand , Vietnam.
-
-👍 Yes, you've been to my country! 
-😲 You could've visited my country by just crossing the border or taking a ferry! 
-👎 No, you've missed my wonderful country and I will tell you why you should visit. 
-
-If I haven't visited your country, please mention one worthwhile landmark I should check out!
+```
+👍 Yes, you've been to my country! 😲 You could've visited my country by just crossing the border or taking a ferry!  👎 No, you've missed my wonderful country and I will tell you why you should visit. 
 ```
 
 ## S0.0 Q&A
 
 ```
-I will answer most of your questions during the final Q&A segment, but I may answer a few during the breaks. Please do not use the Q&A button because I will not see the question after the course ends.
+I will answer most of your questions during the final Q&A segment, but I may answer a few during the breaks. Please do not use the Q&A button because I will not see the question after the course ends. Feel free to post questions here as they arise during the course. You are anonymous and there are NO DUMB questions. If I fail to answer during the course, I will try to answer your question on an FAQ that I will make available at https://github.com/egarbarino/safari_gke
+```
 
-Feel free to post questions here as they arise during the course. You are anonymous and there are NO DUMB questions. If I fail to answer during the course, I will try to answer your question on an FAQ that I will make available at https://github.com/egarbarino/safari_gke
-
-I will also ask for feedback at regular intervals.
-
-👍I get it
-👎Too much work, I just want to sit and watch
+```
+👍I get it 👎Too much work, I just want to sit and watch
 ```
 
 ## S1.1 Setting up The Google Cloud Shell and GKE
@@ -276,12 +303,8 @@ I will run the 'date' command using Kubernetes in a few moments. As 'silly' as t
 
 ### Watch Pod Activity
 
-On Main TMUX Window
+deleted
 
-- Pane 1: Run `watch -n 1 kubectl get pod`
-- Pane 2: Run `kubectl get -w events`
-- Pane 3: Leave empty
-- Pane 4: Run commands here
 
 ### Run a Single Command
 
