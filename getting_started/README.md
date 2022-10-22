@@ -60,11 +60,11 @@ gcloud compute disks list | grep NAME
 Pane 4 - Cluster Create Command
 
 ```
-gcloud container clusters delete my-cluster \
-	--async \
-	--quiet \
-	--zone europe-west2-a
+gcloud container clusters create my-cluster \
+    --zone europe-west2-a \
+    --project safari-gke
 ```
+
 
 ### Window 0 (BEFORE)
 
