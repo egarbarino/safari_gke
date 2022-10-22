@@ -394,7 +394,7 @@ curl http://127.0.0.1:8080
 Further experiments:
 
 - Attach to nginx using `kubectl attach nginx` (and generate more web requests!)
-- Dettach by pressing CTRL+C
+- Detach by pressing CTRL+C
 - Destroy Pod
 
 ### Pod Manifest
@@ -443,7 +443,7 @@ The Pod life cycle is actually rather complex, so I have created a more comprehe
 👍 I got the PDF file. Thanks 😲 I got the PDF file but, this is overwhelming! 👎 The URL is broken. 
 ```
 
-### Startup Arrguments, PostStart and PreStop Hooks
+### Startup Arguments, PostStart and PreStop Hooks
 
 Pane 3.left:
 
@@ -506,7 +506,7 @@ Explore
 vi nginx-self-healing.yaml
 ```
 
-Apply manfiest
+Apply manifest
 
 ```
 kubectl apply -f nginx-self-healing.yaml

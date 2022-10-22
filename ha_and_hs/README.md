@@ -102,7 +102,7 @@ kubectl delete deploy --all
 
 ### Recreate Deployments
 
-Be sure you have montioring panes for deployments, pods, and replicas.
+Be sure you have monitoring panes for deployments, pods, and replicas.
 
 Note the difference in terms of Nginx versions in `nginx-v1-initial-v1.yaml` and `nginx-v2-recreate.yaml`.
 

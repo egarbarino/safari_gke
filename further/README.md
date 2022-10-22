@@ -164,7 +164,7 @@ Explore Server
 vi server.py
 ```
 
-Exlore ConfigMap
+Explore ConfigMap
 
 ```
 cd wip
@@ -266,7 +266,7 @@ kubectl run --image=alpine --restart=Never --rm -i test -- nslookup -type=srv se
 
 Pane 2: `kubectl logs -f client` (do not press ENTER yet)
 
-(!) Concept of sharding using moduluo arithmetic
+(!) Concept of sharding using modulo arithmetic
 
 ```
 python3

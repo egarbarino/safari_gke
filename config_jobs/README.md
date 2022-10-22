@@ -327,7 +327,7 @@ Note:
 
 * `spec.completions` (need to succeed 6 times)
 * `spec.parallelism` (may run two pods in parallel to achieve the job)
-* Script which randomly produces SUCESS or FAILURE
+* Script which randomly produces SUCCESS or FAILURE
 
 Apply
 

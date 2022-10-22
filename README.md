@@ -22,7 +22,7 @@ the directly executable scripts.
     * Pod Life Cycle and Health Probes
 * [S2 | High Availability and Scalability](ha_and_hs/README.md)
     * Deployment Controller
-    * Deployment Strategy: Recrate, Rolling Updates, Blue/Green
+    * Deployment Strategy: Recreate, Rolling Updates, Blue/Green
     * Service Controller
     * Zero-downtime Deployment and Canaries
 * [S3 | Configuration and Jobs](config_jobs/README.md)
