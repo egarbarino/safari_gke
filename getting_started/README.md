@@ -238,13 +238,7 @@ _end of section_
 
 ## S1.2 Creating and Destroying Kubernetes Clusters
 
-```
-In Kubernetes everything is an 'object', a so-called 'API resource', or simply 'resource'. Why should you care? Because the same commands and workflows apply to most objects, such as 'kubectl create', 'kubectl delete', 'kubectl get', 'kubectl explain', and so on. But what is an resource? A nested set of attributes, typically displayed (and edited) using either the JSON or YAML formats.
-```
 
-```
-👍 I eat both JSON and YAML for breakfast every day 😲 I'm shocked. I come from the .ini, .properties, and .xml era. 👎 Who are Jason and Yamehl?
-```
 
 ### Cluster Creation and Deletion
 
@@ -281,15 +275,12 @@ kubectl explain node
 kubectl delete node/XXX
 ```
 
+_end of section_
+
+---
+
 ## S1.3 Launching Docker Containers Using Pods
 
-```
-I will run the 'date' command using Kubernetes in a few moments.
-```
-
-```
-👍 Simpler than 'Hello World' 😲 I didn't know Kubernetes could tell the time 👎 I don't need Kubernetes to tell what the time is. I have an Apple Watch Series 8. 
-```
 
 ### Run a Single Command
 
@@ -435,13 +426,6 @@ _end of session_
 
 ## S1.4 Managing Pod Life Cycle
 
-```
-The Pod life cycle is actually rather complex, so I have created a more comprehensive illustration at https://garba.org/article/blog/2018/k8s_pod_lc.pdf 
-```
-
-```
-👍 I got the PDF file. Thanks 😲 I got the PDF file but, this is overwhelming! 👎 The URL is broken. 
-```
 
 ### Startup Arguments, PostStart and PreStop Hooks
 
@@ -490,13 +474,6 @@ _end of section_
 
 ## S1.5 Implementing Self-Healing Mechanisms
 
-```
-The probe life cycle is not that complicated, but it helps to visualise how the various attributes help implemented the intended behaviour. For this, I have another illustration here: https://garba.org/posts/2020/k8s-life-cycle/
-```
-
-```
-👍 I see a bunch of UML Activity diagrams 😲 I see lots of boxes and arrows, I'm a bit scared 👎 The URL is broken. 
-```
 
 ### Implementing Readiness and Liveness Probes
 

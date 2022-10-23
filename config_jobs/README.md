@@ -38,13 +38,6 @@ cd ~/safari_gke/config_jobs/
 
 ## S3.1 Externalizing Configuration using ConfigMap
 
-```
-How are properties, such as database hostnames, are applied to applications in your organization?
-```
-
-```
-👍 As command line flags or environment variables 😲 As .ini/.properties files 👎 They are hardcoded 
-```
 
 ### Example of Hard Coded Configuration
 
@@ -167,14 +160,6 @@ _end of section_
 ---
 
 ## S3.2 Protecting Credentials using Secrets
-
-```
-Have you heard of Base 64 before?
-```
-
-```
-👍 Yes, of course 😲 I thought it was something to do with email attachments and MIME types 👎 Isn't Base 64 where some UFO crashed, as opposed to Area 54?
-```
 
 Pane 3.right: Delete everything
 
@@ -419,13 +404,6 @@ _end of section_
 
 ## S3.4 Scheduling Recurring Tasks Using CronJobs
 
-```
-Are you familiar with Unix-like cron jobs, or the 'crontab' file? 
-```
-
-```
-👍 Yes, but thank God for https://crontab.guru/ 😲 Yes, but I always use other 'scheduling' mechanisms 👎 No, is it to do with crony, misbehaved programs?
-```
 
 Pane 3.right: Delete jobs
 

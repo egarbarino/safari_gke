@@ -42,15 +42,6 @@ cd ~/safari_gke/ha_and_hs/
 
 ## S2.1 Launching Deployments
 
-```
-In a few moments, we will see that even though Deployments control ReplicaSets, and ReplicaSets control Pods, neither ReplicaSets nor Pods are declared separately. Both ReplicaSets and Pods are 'spawned' from a single Deployment manifest or imperative 'kubectl create deployment' command. Wait a couple of minutes, and let me know your opinion about Deployments.
-```
-
-```
-👍 It is a mechanism to define both scaling and image versioning properties applicable to a fleet of Pods 😲 I should have been called 'Scaling', 'Version' controller, or 'ScalingVersion' controller 👎 I was so happy with simple naked Pods
-```
-
-
 
 Create deployment
 
@@ -86,13 +77,6 @@ Further details at: https://garba.org/posts/2020/k8s-life-cycle/
 
 ## S2.2 Rolling and Blue/Green Deployments
 
-```
-Do you have experience with traditional blue/green deployments in bare metal data centers? https://martinfowler.com/bliki/BlueGreenDeployment.html
-```
-
-```
-👍 Yes, this is how we do things at work 😲 I believe it is something that some enterprises do to minimise downtime 👎 First time I’m learning about blue/green deployments but I'll check the link
-```
 
 Pane 3.right:
 
@@ -160,13 +144,6 @@ Further details at: https://garba.org/posts/2020/k8s-life-cycle/
 
 ## S2.3 Instrumenting Static Scaling and Autoscaling
 
-```
-What does come to mind when you hear the word 'auto-scaling'?
-```
-
-```
-👍 Many Pods popping up like Gremlins 😲 Not having to worry during peak periods such as Black Friday 👎 A threat to my 'load forecasting' job
-```
 
 Delete everything and launch a new deployment
 
@@ -224,13 +201,6 @@ _end of section_
 
 ## S2.4 Pod-to-Pod Access
 
-```
-A service controller is the mechanism by which Kubernetes creates a 'load balancer', or a 'round robin' mechanism to access a fleet of Pods. Why do you think the Pod-to-Pod use case is relevant?
-```
-
-```
-👍 In the 'microservices' age, most applications consist of various interconnected Pods 😲 I'm surprised that even internal Pods may come as 'fleets' 👎 It is much easier to interconnect monolithic Pods with hard-coded IP addresses
-```
 
 Delete all previous deployments and Pods
 
@@ -294,14 +264,6 @@ _end of section_
 
 ## S2.5 Publishing Services on the Public Internet
 
-```
-The Service controller implements a soft 'load balancer' as far as round robin is concerned, but the 'Internet to Pod' use case, necesites the interaction with the actual Google Cloud Platform's 'load balancer' resource (and underlying network infrastructure). Why do you think this is?
-```
-
-```
-👍 Because traffic needs to flow from the public internet into GCP, and then into GKE (within GCP) 😲 Because assigning public IP addresses falls outside the scope of Kubernetes 👎 I thought Kubernetes was fully self-contained and portable across all clouds
-```
-
 Pane 3.left:
 
 ```
@@ -326,13 +288,6 @@ _end of section_
 
 ## S2.6 Zero Downtime Releases
 
-```
-What is the most important thing, in your opinion, for the release of a new application version? (No right answer!)
-```
-
-```
-👍 That once the user lands on the new version, they stay on it 😲 That the user never experiences downtime even though they may intermittently see two different versions 👎 Nothing. I prefer large downtime windows on Sunday nights.
-```
 
 Pane 3.left: delete all previous deployments and services
 

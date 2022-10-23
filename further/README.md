@@ -43,13 +43,6 @@ cd ~/safari_gke/further
 
 ## S4.1 Running Server-Wide Services using DaemonSets
 
-```
-If you are a Linux user, how would do you define a 'daemon', as opposed to a simple program running in the background? (no wrong answer)
-```
-
-```
-👍 A daemon typically performs services for one or more other programs 😲 A daemon is normally started during startup time 👎 I'm afraid of ghosts and day-mons. Dee-mons? Not scary.
-```
 
 ### TCP-Based Daemons
 
@@ -135,13 +128,6 @@ _end of section_
 
 ## S4.2 Instrument Stateful Applications using StatefulSets
 
-```
-Have you ever installed a database management system all by yourself?
-```
-
-```
-👍 Yes, a SQL database 😲 Yes, a noSQL database 👎 Haven't you heard of Google Spanner? I prefer managed databases
-```
 
 Delete everything
 
