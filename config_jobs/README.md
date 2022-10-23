@@ -241,13 +241,6 @@ _end of section_
 
 ## S3.3 Implementing Batch Processes using Jobs
 
-```
-Why do you think Jobs are different from Deployments?
-```
-
-```
-👍 Jobs, unlike web servers, are for tasks that ultimately must complete 😲 Jobs are for mainframe-like programs 👎 Jobs rhyme with 'Insider', or with the founder of a fruit-named company
-```
 
 Pane 4
 
