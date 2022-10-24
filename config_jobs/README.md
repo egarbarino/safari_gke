@@ -245,7 +245,7 @@ _end of section_
 Pane 4
 
 ```
-kubect delete all --all
+kubectl delete all --all
 ```
 
 Pane 2
