@@ -22,8 +22,8 @@ $ gcloud init
 To continue, you must log in. Would you like to log in (Y/n)? Y
 ```
 
-After answering this questions, you'll be redirected to a web page to enter your credentials.
-Once you are succesfully authenticated, you'll be offered the options of selecting defaults. For the course (but you might have defined different options), these are:
+After answering this question, you'll be redirected to a web page to enter your credentials.
+Once you are succesfully authenticated, you'll be offered options to select defaults. For the course (but you might have defined different options), these are:
 
 Project (If you don't have a default project, you can create one using the web console)
 
