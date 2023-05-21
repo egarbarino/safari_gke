@@ -34,7 +34,6 @@ the directly executable scripts.
     * DeamonSet Controller
     * StatefulSet Controller
 * [S5 | FAQ](faq/README.md)
-    * WIP
 
 
 
